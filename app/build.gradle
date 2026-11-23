@@ -8,8 +8,8 @@ android {
         applicationId "uz.eziplay.app"
         minSdk 24
         targetSdk 34
-        versionCode 10231
-        versionName "1.2.31"
+        versionCode 10228
+        versionName "1.2.28"
 
         // Yangilanishlar shu GitHub repodan olinadi (repo PUBLIC bo'lishi kerak).
         // Format: "foydalanuvchi/repo-nomi"  — masalan "ali/eziplay-android"

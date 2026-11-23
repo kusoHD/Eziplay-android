@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -43,6 +45,30 @@ public class MainActivity extends Activity {
     private boolean updateChecked = false;
     private volatile boolean downloading = false;
     private static final int RC_GOOGLE = 9001;
+    // Har 5 daqiqada GitHub'ni tekshiradi (ilova ochiq bo'lganda)
+    private static final long UPDATE_INTERVAL_MS = 5 * 60 * 1000L;
+    private final Handler updateHandler = new Handler(Looper.getMainLooper());
+    private final Runnable updatePoll = new Runnable() {
+        @Override public void run() {
+            checkForUpdate();
+            updateHandler.postDelayed(this, UPDATE_INTERVAL_MS);
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Ilova ochilganda / orqa fondan qaytganda darhol tekshiradi
+        if (webView != null) checkForUpdate();
+        updateHandler.removeCallbacks(updatePoll);
+        updateHandler.postDelayed(updatePoll, UPDATE_INTERVAL_MS);
+    }
+
+    @Override
+    protected void onPause() {
+        updateHandler.removeCallbacks(updatePoll);
+        super.onPause();
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override

@@ -7,7 +7,16 @@
 <script>
 // FIREBASE: config is entered in the Developer panel (saved in localStorage "fb-config").
 // You can also hard-code it here instead of null.
-const FIREBASE_CONFIG = (function () { try { return JSON.parse(localStorage.getItem("fb-config") || "null"); } catch (e) { return null; } })();
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBzNF5z_2Snxe4QH7lzf-4QVsK_tRFve3s",
+  authDomain: "eziplay-uz.firebaseapp.com",
+  databaseURL: "https://eziplay-uz-default-rtdb.firebaseio.com",
+  projectId: "eziplay-uz",
+  storageBucket: "eziplay-uz.firebasestorage.app",
+  messagingSenderId: "689539219973",
+  appId: "1:689539219973:web:e5cb2504a07aa433bd526c",
+  measurementId: "G-RTL9WNHXRF"
+};
 </script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -2531,6 +2540,7 @@ function saveScore(gained) {
   r.best = Math.max(r.best != null ? r.best : 0, gained);
   a.sort((x, y) => y.score - x.score);
   try { localStorage.setItem("eziplay-rating", JSON.stringify(a.slice(0, 50))); } catch (e) {}
+  try { if (fbDb && r) fbDb.collection("ratings").doc(String(r.name)).set({ name: r.name, score: r.score || 0, best: r.best || 0 }, { merge: true }); } catch (e) {}
 }
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 function renderRating() {
@@ -2612,16 +2622,18 @@ function renderDev() {
 function devDeleteAccount(i) {
   const accs = getAccounts(), gone = accs.splice(i, 1)[0];
   setAccounts(accs);
+  if (fbDb && gone) { try { fbDb.collection("accounts").doc(gone.username).delete(); fbDb.collection("ratings").doc(gone.username).delete(); } catch (e) {} }
   if (gone) { const r = loadRating().filter(x => (x.name || "").toLowerCase() !== gone.username.toLowerCase()); try { localStorage.setItem("eziplay-rating", JSON.stringify(r)); } catch (e) {} }
   renderDev(); renderRating();
 }
 function devResetCoins(i) {
-  const a = loadRating(); if (a[i]) { a[i].score = 0; a[i].best = 0; }
+  const a = loadRating(); if (a[i]) { a[i].score = 0; a[i].best = 0; if (fbDb) { try { fbDb.collection("ratings").doc(String(a[i].name)).set({ name: a[i].name, score: 0, best: 0 }, { merge: true }); } catch (e) {} } }
   try { localStorage.setItem("eziplay-rating", JSON.stringify(a)); } catch (e) {}
   renderDev(); renderRating();
 }
 function devClearAll() {
   try { localStorage.setItem("eziplay-rating", "[]"); localStorage.setItem("lv-done", "[]"); } catch (e) {}
+  if (fbDb) { try { fbDb.collection("ratings").get().then(sn => { const b = fbDb.batch(); sn.forEach(d => b.delete(d.ref)); return b.commit(); }); } catch (e) {} }
   renderDev(); renderRating();
 }
 
@@ -2747,6 +2759,7 @@ function fbInit(cfg) {
     if (el) el.textContent = "Firebase foydalanuvchisi: " + (u ? u.email + " (" + u.uid + ")" : "yo'q");
   });
   fbSetStatus(true, "Ulangan: " + (cfg.projectId || "firebase"));
+  try { fbListen(); } catch (e) {}
 }
 function fbConnect() {
   const cfg = fbParseConfig(document.getElementById("fb-config").value);
@@ -2768,6 +2781,46 @@ function fbDisconnect() {
 function fbReady() {
   if (!fbAuth) { toast(t('t_fb_need')); return false; }
   return true;
+}
+let fbListening = false;
+function fbListen() {
+  if (!fbDb || fbListening) return;
+  fbListening = true;
+  // Reyting: jonli yangilanadi. Lokal-only yozuvlar Firestore'ga yuboriladi (yo'qolmasin).
+  fbDb.collection("ratings").onSnapshot(snap => {
+    const remote = [], names = new Set();
+    snap.forEach(d => { const x = d.data(); if (x && x.name) { remote.push({ name: x.name, score: x.score || 0, best: x.best || 0 }); names.add(String(x.name)); } });
+    loadRating().forEach(x => {
+      if (x.name && !names.has(String(x.name))) {
+        remote.push(x);
+        try { fbDb.collection("ratings").doc(String(x.name)).set({ name: x.name, score: x.score || 0, best: x.best || 0 }, { merge: true }); } catch (e) {}
+      }
+    });
+    remote.sort((a, b) => b.score - a.score);
+    try { localStorage.setItem("eziplay-rating", JSON.stringify(remote.slice(0, 50))); } catch (e) {}
+    try { renderRating(); } catch (e) {}
+  }, err => console.error("ratings listen", err));
+
+  // Akkauntlar: jonli. Lokal-only akkauntlar yuboriladi, o'chirilganlar qayta paydo bo'lmaydi.
+  fbDb.collection("accounts").onSnapshot(snap => {
+    const remote = [], names = new Set();
+    snap.forEach(d => { const x = d.data(); if (x && x.username) { remote.push({ username: x.username, email: x.email || "", name: x.name || "", age: x.age || "" }); names.add(x.username); } });
+    getAccounts().forEach(a => {
+      if (a.username && !names.has(a.username)) {
+        remote.push(a);
+        try { fbDb.collection("accounts").doc(a.username).set({ username: a.username, email: a.email || "", name: a.name || "", age: a.age || "" }, { merge: true }); } catch (e) {}
+      }
+    });
+    setAccounts(remote);
+    try { renderDev(); } catch (e) {}
+  }, err => console.error("accounts listen", err));
+
+  // Sayt sozlamalari (admin o'zgartirsa, hamma darhol oladi)
+  fbDb.collection("settings").doc("auth").onSnapshot(d => {
+    if (!d.exists) return;
+    try { localStorage.setItem("soc-cfg", JSON.stringify(Object.assign(socCfg(), d.data()))); } catch (e) {}
+    try { socFill(); renderSocial(); fbCheck(); } catch (e) {}
+  }, err => console.error("settings listen", err));
 }
 function fbSignIn() {
   if (!fbReady()) return;
@@ -4195,7 +4248,7 @@ Object.assign(X.ru, {"reg_phone": "Номер телефона", "reg_birth": "�
 applyI18n();
 
 /* ===== v2: Kirish usullari, Firebase tekshiruv, status bar rangi, klaviatura ===== */
-const SOC_DEF={google:true,discord:true,telegram:true,googleId:"",discordId:"",discordRu:"",telegramBot:"",sync:false};
+const SOC_DEF={google:true,discord:true,telegram:true,googleId:"",discordId:"",discordRu:"",telegramBot:"",sync:true};
 const SOC_NAME={google:"Google",discord:"Discord",telegram:"Telegram"};
 const SOC_ICO={
  google:'<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M21.35 11.1H12v2.9h5.35c-.23 1.4-1.6 4.1-5.35 4.1a6.1 6.1 0 0 1 0-12.2c1.9 0 3.1.8 3.8 1.5l2.6-2.5A9.5 9.5 0 0 0 12 2.5a9.5 9.5 0 1 0 0 19c5.5 0 9.1-3.9 9.1-9.3 0-.6-.1-1.1-.15-1.1z"/></svg>',
@@ -4392,6 +4445,9 @@ function eziHide() { const el = document.getElementById("ezi-upd"); if (el) el.c
 window.eziOnUpdate = function (info) {
   if (!info || !info.version || !info.url) return;
   if (eziCmp(info.version, EZI_VER) <= 0) return;
+  // Bu versiya uchun dialog allaqachon ko'rsatilgan bo'lsa, qayta chiqarmaymiz (polling spam bo'lmasin)
+  if (window.__eziSeen === info.version) return;
+  window.__eziSeen = info.version;
   eziInfo = info;
   const el = eziBox();
   el.querySelector("h3").textContent = eziT("title");
