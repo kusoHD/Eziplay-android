@@ -4298,7 +4298,7 @@ enterAs=function(n,e,r){_enterAs(n,e,r);try{if(socCfg().sync&&fbDb)fbDb.collecti
   const f=()=>{const c=getComputedStyle(document.body).backgroundColor;if(c&&c!=="rgba(0, 0, 0, 0)")m.content=c};
   f();new MutationObserver(f).observe(document.body,{attributes:true,attributeFilter:["class","style"]});})();
 /* yozuv tezligi: klaviatura ochilganda matn ko'rinib tursin */
-function tyFix(){const a=document.activeElement;if(a&&a.id==="ty-input")window.scrollTo(0,0)}
+function tyFix(){const a=document.activeElement;if(a&&a.id==="ty-input"){const b=document.getElementById("ty-box");if(b)b.scrollIntoView({block:"center",behavior:"smooth"})}}
 document.addEventListener("focusin",e=>{if(e.target.id==="ty-input")[60,250,550].forEach(d=>setTimeout(tyFix,d))});
 if(window.visualViewport)visualViewport.addEventListener("resize",()=>setTimeout(tyFix,60));
 </script>
