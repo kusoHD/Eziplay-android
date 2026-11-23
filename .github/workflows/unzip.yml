@@ -13,15 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Extract zip files and remove them
+      - name: Extract zip files
         run: |
           shopt -s nullglob
           for z in *.zip; do
             unzip -o "$z"
             rm -f "$z"
           done
-
       - name: Commit extracted files
         run: |
           git config user.name "github-actions"
