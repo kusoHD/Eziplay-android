@@ -959,6 +959,7 @@ body.kbd #game-type .card{margin:0!important;padding:14px}
       <p class="fb-doc">Yoqilgan tugmalar Kirish va Ro'yxatdan o'tish sahifasida chiqadi.</p>
       <div class="row"><span><b>Google</b> (Firebase Auth)</span><label class="switch"><input type="checkbox" id="sc-google" onchange="socSave()"><span class="slider"></span></label></div>
       <div class="row"><span><b>Discord</b></span><label class="switch"><input type="checkbox" id="sc-discord" onchange="socSave()"><span class="slider"></span></label></div>
+      <div class="field"><label>Google Client ID (Android OAuth, Web client ID)</label><input type="text" id="sc-google-id" placeholder="xxxx.apps.googleusercontent.com"></div>
       <div class="field"><label>Discord Client ID</label><input type="text" id="sc-discord-id"></div>
       <div class="field"><label>Discord Redirect URI (bo'sh = shu sahifa)</label><input type="text" id="sc-discord-ru"></div>
       <div class="row"><span><b>Telegram</b></span><label class="switch"><input type="checkbox" id="sc-telegram" onchange="socSave()"><span class="slider"></span></label></div>
@@ -3369,7 +3370,7 @@ dnUpdate = function () {
 };
 
 /* ===== Themes: dark & light free, others need Eziplay Premium ===== */
-const FREE_THEMES = ['dark', 'light', 'auto'];
+const FREE_THEMES = ['peach', 'dark', 'light', 'auto'];
 const PREM_T = { uz:"Eziplay Premium kerak", en:"Eziplay Premium required", ru:"Нужен Eziplay Premium", tr:"Eziplay Premium gerekli", de:"Eziplay Premium erforderlich", fr:"Eziplay Premium requis", es:"Requiere Eziplay Premium", it:"Richiede Eziplay Premium", pt:"Requer Eziplay Premium", zh:"需要 Eziplay Premium", ja:"Eziplay Premium が必要です", ko:"Eziplay Premium 필요", ar:"يتطلب Eziplay Premium", uk:"Потрібен Eziplay Premium", pl:"Wymaga Eziplay Premium", nl:"Eziplay Premium vereist", az:"Eziplay Premium tələb olunur", kk:"Eziplay Premium қажет", ky:"Eziplay Premium керек", tg:"Eziplay Premium лозим аст", tk:"Eziplay Premium gerek" };
 Object.keys(X).forEach(l => Object.assign(X[l], { prem_locked: PREM_T[l] || PREM_T.en }));
 
@@ -4194,7 +4195,7 @@ Object.assign(X.ru, {"reg_phone": "Номер телефона", "reg_birth": "�
 applyI18n();
 
 /* ===== v2: Kirish usullari, Firebase tekshiruv, status bar rangi, klaviatura ===== */
-const SOC_DEF={google:true,discord:true,telegram:true,discordId:"",discordRu:"",telegramBot:"",sync:false};
+const SOC_DEF={google:true,discord:true,telegram:true,googleId:"",discordId:"",discordRu:"",telegramBot:"",sync:false};
 const SOC_NAME={google:"Google",discord:"Discord",telegram:"Telegram"};
 const SOC_ICO={
  google:'<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M21.35 11.1H12v2.9h5.35c-.23 1.4-1.6 4.1-5.35 4.1a6.1 6.1 0 0 1 0-12.2c1.9 0 3.1.8 3.8 1.5l2.6-2.5A9.5 9.5 0 0 0 12 2.5a9.5 9.5 0 1 0 0 19c5.5 0 9.1-3.9 9.1-9.3 0-.6-.1-1.1-.15-1.1z"/></svg>',
@@ -4219,25 +4220,26 @@ function socDone(provider,name,email,photo,pid){
   }
   enterAs(a.username,a.email,"user");
 }
-/* Android ilova: native Google Sign-In -> idToken -> Firebase */
+/* Android ilova: native Google Sign-In -> idToken (Firebase ishtirok etmaydi) */
+function eziJwt(tok){
+  const p=tok.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
+  const b=p+"=".repeat((4-p.length%4)%4);
+  return JSON.parse(decodeURIComponent(atob(b).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")));
+}
 window.eziGoogleToken = function (idToken) {
-  try { if (!fbAuth && FIREBASE_CONFIG) fbInit(FIREBASE_CONFIG); } catch (e) {}
-  if (!fbAuth) return toast("Google: Firebase ulanmagan (Developer panel)");
-  const cred = firebase.auth.GoogleAuthProvider.credential(idToken);
-  fbAuth.signInWithCredential(cred)
-    .then(r => socDone("google", r.user.displayName || (r.user.email || "").split("@")[0], r.user.email, r.user.photoURL, r.user.uid))
-    .catch(e => toast(e.message || "Google xatosi"));
+  try {
+    const u = eziJwt(idToken);
+    const name = u.name || (u.email || "").split("@")[0] || "google_user";
+    socDone("google", name, u.email || "", u.picture || "", u.sub);
+  } catch (e) { toast("Google xatosi"); }
 };
 window.eziGoogleError = function (msg) { toast(msg || "Google xatosi"); };
 function socLogin(k){
   const c=socCfg();
   if(k==="google"){
-    if(EZI_NATIVE){ try{EZI_NATIVE.googleSignIn()}catch(e){toast("Google xatosi")} return; }
-    try{if(!fbAuth&&FIREBASE_CONFIG)fbInit(FIREBASE_CONFIG)}catch(e){}
-    if(!fbAuth)return toast("Google: Firebase ulanmagan (Developer panel)");
-    const p=new firebase.auth.GoogleAuthProvider();
-    fbAuth.signInWithPopup(p).then(r=>socDone("google",r.user.displayName||(r.user.email||"").split("@")[0],r.user.email,r.user.photoURL,r.user.uid))
-      .catch(e=>{if(/popup|operation-not-supported|web-storage/i.test((e.code||"")+(e.message||"")))fbAuth.signInWithRedirect(p);else toast(e.message)});
+    if(!EZI_NATIVE) return toast("Google kirish faqat Android ilovada ishlaydi");
+    if(!c.googleId) return toast("Google: Client ID kiritilmagan (Developer panel)");
+    try{EZI_NATIVE.googleSignIn(c.googleId)}catch(e){toast("Google xatosi")}
   }else if(k==="discord"){
     if(!c.discordId)return toast("Discord: Client ID kiritilmagan (Developer panel)");
     const ru=c.discordRu||(location.origin+location.pathname);
@@ -4256,12 +4258,12 @@ function socLogin(k){
 function socFill(){
   const c=socCfg(),g=id=>document.getElementById(id);if(!g("sc-google"))return;
   ["google","discord","telegram","sync"].forEach(k=>g("sc-"+k).checked=!!c[k]);
-  g("sc-discord-id").value=c.discordId;g("sc-discord-ru").value=c.discordRu;g("sc-telegram-bot").value=c.telegramBot;
+  g("sc-google-id").value=c.googleId;g("sc-discord-id").value=c.discordId;g("sc-discord-ru").value=c.discordRu;g("sc-telegram-bot").value=c.telegramBot;
 }
 function socSave(show){
   const g=id=>document.getElementById(id);
   const c={google:g("sc-google").checked,discord:g("sc-discord").checked,telegram:g("sc-telegram").checked,sync:g("sc-sync").checked,
-    discordId:g("sc-discord-id").value.trim(),discordRu:g("sc-discord-ru").value.trim(),telegramBot:g("sc-telegram-bot").value.trim()};
+    googleId:g("sc-google-id").value.trim(),discordId:g("sc-discord-id").value.trim(),discordRu:g("sc-discord-ru").value.trim(),telegramBot:g("sc-telegram-bot").value.trim()};
   try{localStorage.setItem("soc-cfg",JSON.stringify(c))}catch(e){}
   renderSocial();fbCheck();if(show===true)toast("Saqlandi");
 }

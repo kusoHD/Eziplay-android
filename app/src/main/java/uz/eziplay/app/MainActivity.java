@@ -102,8 +102,8 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
-        public void googleSignIn() {
-            runOnUiThread(MainActivity.this::startGoogleSignIn);
+        public void googleSignIn(String clientId) {
+            runOnUiThread(() -> startGoogleSignIn(clientId));
         }
 
         @JavascriptInterface
@@ -248,9 +248,9 @@ public class MainActivity extends Activity {
     }
 
     /* ---------- Google Sign-In (native, WebView'da ishlamaydigan OAuth o'rniga) ---------- */
-    private void startGoogleSignIn() {
+    private void startGoogleSignIn(String clientId) {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(BuildConfig.GOOGLE_WEB_CLIENT_ID)
+                .requestIdToken(clientId)
                 .requestEmail()
                 .build();
         GoogleSignInClient client = GoogleSignIn.getClient(this, gso);

@@ -14,8 +14,6 @@ android {
         // Yangilanishlar shu GitHub repodan olinadi (repo PUBLIC bo'lishi kerak).
         // Format: "foydalanuvchi/repo-nomi"  — masalan "ali/eziplay-android"
         buildConfigField "String", "GITHUB_REPO", "\"OWNER/eziplay-android\""
-        // Firebase > Authentication > Google provayderidagi "Web client ID" (xxx.apps.googleusercontent.com)
-        buildConfigField "String", "GOOGLE_WEB_CLIENT_ID", "\"WEB_CLIENT_ID.apps.googleusercontent.com\""
     }
 
     buildFeatures {
