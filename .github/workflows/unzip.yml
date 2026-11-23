@@ -1,4 +1,4 @@
-name: unzip
+name: Auto unzip
 
 on:
   push:
