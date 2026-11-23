@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fullscreen emas: ilova tizim panelining (status bar) pastida chiziladi, tepa kesilmaydi -->
+    <style name="Theme.Eziplay" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">#FFE5D0</item>
+        <item name="android:statusBarColor">#FFE5D0</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

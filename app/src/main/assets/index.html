@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F5F5F7">
 <script>
 // FIREBASE: config is entered in the Developer panel (saved in localStorage "fb-config").
 // You can also hard-code it here instead of null.
@@ -12,10 +13,6 @@ const FIREBASE_CONFIG = (function () { try { return JSON.parse(localStorage.getI
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <title>Eziplay</title>
-<link rel="icon" type="image/png" sizes="1080x1080" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
-<meta name="theme-color" content="#0A0A0A">
-<link rel="manifest" href="manifest.json">
 <style>
   :root {
     --peach: #FFE5D0; --peach-2: #FFCBA4; --peach-dark: #F4A27A;
@@ -516,6 +513,35 @@ const FIREBASE_CONFIG = (function () { try { return JSON.parse(localStorage.getI
   .gbtn.sel { border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,0,0,.06); }
   .terms-row { display:flex; gap:10px; align-items:flex-start; margin:14px 0; font-size:.95rem; }
   .terms-row input { margin-top:4px; width:18px; height:18px; accent-color:var(--accent); }
+
+/* ===== v2 fixes ===== */
+html{background:var(--bg,var(--peach));min-height:100%}
+body{min-height:100vh;min-height:100dvh}
+body.auth main{align-items:center!important;justify-content:center;min-height:100vh;min-height:100dvh;padding:max(14px,env(safe-area-inset-top)) 16px max(14px,env(safe-area-inset-bottom))!important}
+body.auth .page.active{max-width:400px;margin:auto}
+body.auth .page-head{justify-content:center;margin-bottom:12px}
+body.auth .page-head .icon{width:40px;height:40px}
+body.auth .page h2{font-size:1.4rem}
+body.auth .card{padding:18px;margin-bottom:0}
+body.auth .field{gap:4px;margin-bottom:10px}
+body.auth .field label{font-size:.85rem}
+body.auth .field input,body.auth select{padding:8px 10px;font-size:16px;width:100%;min-width:0}
+body.auth .btn{width:100%;margin-top:6px;padding:10px}
+body.auth .gbtn{padding:8px 10px;font-size:.95rem}
+body.auth .terms-row{font-size:.85rem;margin:8px 0}
+body.auth .card p{font-size:.9rem}
+.gbtn svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.soc{display:flex;align-items:center;gap:10px;margin:12px 0 8px;font-size:.8rem;opacity:.7}
+.soc::before,.soc::after{content:"";flex:1;height:1px;background:var(--peach-2)}
+.soc-row{display:flex;gap:6px}
+.sbtn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 4px;border-radius:12px;border:2px solid var(--peach-2);background:var(--white);color:var(--text);font:inherit;font-weight:600;font-size:.8rem;cursor:pointer;min-width:0}
+.sbtn svg{width:19px;height:19px;flex-shrink:0}
+.sbtn:active{transform:scale(.96)}
+.ck{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--peach-2);font-size:.92rem}
+#ty-input{position:fixed!important;top:0;left:0}
+body.kbd #game-type .ty-hk,body.kbd #snd-btn{display:none!important}
+body.kbd main{padding-top:8px!important;padding-bottom:8px!important}
+body.kbd #game-type .card{margin:0!important;padding:14px}
 </style>
 </head>
 <body>
@@ -565,7 +591,7 @@ const FIREBASE_CONFIG = (function () { try { return JSON.parse(localStorage.getI
     <div class="grid games-grid">
       <div class="game"><div class="game-art" aria-hidden="true"><svg viewBox="0 0 200 110"><g fill="#fff" stroke="var(--text)" stroke-width="2"><rect x="30" y="20" width="140" height="70" rx="6"/></g><g fill="#222"><rect x="55" y="20" width="14" height="42" rx="2"/><rect x="85" y="20" width="14" height="42" rx="2"/><rect x="115" y="20" width="14" height="42" rx="2"/></g><g fill="var(--accent)" opacity=".9"><circle cx="100" cy="68" r="5"/></g></svg></div><h3 data-i18n="pn_title"></h3><p data-i18n="pn_desc"></p><button class="btn" data-i18n="start" onclick="startGame(7)"></button></div>
       <div class="game"><div class="game-art" aria-hidden="true"><svg viewBox="0 0 200 110"><circle cx="100" cy="55" r="44" fill="none" stroke="var(--accent)" stroke-width="5" opacity=".35"/><circle cx="100" cy="55" r="26" fill="none" stroke="var(--accent)" stroke-width="5" opacity=".6"/><circle cx="100" cy="55" r="9" fill="var(--accent)"/><path d="M150 22l10 6-6 2 5 9-4 2-5-9-5 5z" fill="var(--text)"/></svg></div><h3 data-i18n="game_tap"></h3><p data-i18n="game_tap_desc"></p><button class="btn" data-i18n="start" onclick="startGame(1)"></button></div>
-      <div class="game"><div class="game-art" aria-hidden="true"><svg viewBox="0 0 200 110"><g fill="var(--white)" stroke="var(--peach-dark)" stroke-width="2"><rect x="28" y="30" width="26" height="26" rx="6"/><rect x="62" y="30" width="26" height="26" rx="6"/><rect x="96" y="30" width="26" height="26" rx="6"/><rect x="130" y="30" width="26" height="26" rx="6"/><rect x="45" y="64" width="26" height="26" rx="6"/><rect x="79" y="64" width="26" height="26" rx="6"/><rect x="113" y="64" width="26" height="26" rx="6"/></g><text x="41" y="49" font-size="14" text-anchor="middle" fill="var(--text)" font-weight="700">A</text><text x="75" y="49" font-size="14" text-anchor="middle" fill="var(--accent)" font-weight="700">B</text><text x="109" y="49" font-size="14" text-anchor="middle" fill="var(--text)" font-weight="700">C</text><text x="143" y="49" font-size="14" text-anchor="middle" fill="var(--text)" font-weight="700">D</text></svg></div><h3 data-i18n="game_type"></h3><p data-i18n="game_type_desc"></p><button class="btn" data-i18n="start" onclick="startGame(2)"></button></div>
+      <div class="game"><div class="game-art" aria-hidden="true"><svg viewBox="0 0 200 110"><g fill="var(--white)" stroke="var(--peach-dark)" stroke-width="2"><rect x="28" y="30" width="26" height="26" rx="6"/><rect x="62" y="30" width="26" height="26" rx="6"/><rect x="96" y="30" width="26" height="26" rx="6"/><rect x="130" y="30" width="26" height="26" rx="6"/><rect x="45" y="64" width="26" height="26" rx="6"/><rect x="79" y="64" width="26" height="26" rx="6"/><rect x="113" y="64" width="26" height="26" rx="6"/></g><text x="41" y="49" font-size="14" text-anchor="middle" fill="var(--text)" font-weight="700">A</text><text x="75" y="49" font-size="14" text-anchor="middle" fill="var(--accent)" font-weight="700">B</text><text x="109" y="49" font-size="14" text-anchor="middle" fill="var(--text)" font-weight="700">C</text><text x="143" y="49" font-size="14" text-anchor="middle" fill="var(--text)" font-weight="700">D</text></svg></div><h3 class="ty-hk" data-i18n="game_type"></h3><p data-i18n="game_type_desc"></p><button class="btn" data-i18n="start" onclick="startGame(2)"></button></div>
       <div class="game"><div class="game-art" aria-hidden="true"><svg viewBox="0 0 200 110"><rect x="20" y="20" width="160" height="70" rx="10" fill="none" stroke="var(--peach-dark)" stroke-width="3"/><rect x="40" y="48" width="24" height="24" fill="var(--peach-dark)" opacity=".6"/><rect x="92" y="34" width="24" height="24" fill="var(--peach-dark)" opacity=".6"/><rect x="132" y="60" width="24" height="24" fill="var(--peach-dark)" opacity=".6"/><circle cx="36" cy="40" r="8" fill="var(--accent)"/><path d="M168 30h-14v14" fill="none" stroke="var(--accent)" stroke-width="4"/></svg></div><h3 data-i18n="lv_title"></h3><p data-i18n="lv_desc"></p><button class="btn" data-i18n="start" onclick="startGame(4)"></button></div>
       <div class="game"><div class="game-art" aria-hidden="true"><svg viewBox="0 0 200 110"><g fill="var(--accent)"><rect x="50" y="70" width="22" height="22" rx="4"/><rect x="74" y="70" width="22" height="22" rx="4" opacity=".7"/><rect x="98" y="70" width="22" height="22" rx="4"/><rect x="122" y="70" width="22" height="22" rx="4" opacity=".7"/><rect x="74" y="46" width="22" height="22" rx="4" opacity=".5"/><rect x="98" y="46" width="22" height="22" rx="4"/></g><rect x="50" y="24" width="22" height="22" rx="4" fill="var(--peach-dark)" transform="rotate(12 61 35)"/></svg></div><h3 data-i18n="bj_title"></h3><p data-i18n="bj_desc"></p><button class="btn" data-i18n="start" onclick="startGame(5)"></button></div>
       <div class="game"><div class="game-art" aria-hidden="true"><svg viewBox="0 0 200 110"><line x1="10" y1="92" x2="190" y2="92" stroke="var(--text)" stroke-width="2" opacity=".4"/><g fill="var(--peach-dark)"><rect x="150" y="62" width="8" height="30" rx="4"/><rect x="158" y="72" width="10" height="6" rx="3"/><rect x="138" y="72" width="8" height="6" rx="3"/></g><g fill="var(--accent)"><rect x="50" y="48" width="16" height="44" rx="8"/><rect x="38" y="62" width="12" height="7" rx="3.5"/><rect x="66" y="56" width="12" height="7" rx="3.5"/></g><circle cx="90" cy="30" r="2" fill="var(--text)" opacity=".5"/><circle cx="110" cy="26" r="2" fill="var(--text)" opacity=".5"/><circle cx="130" cy="30" r="2" fill="var(--text)" opacity=".5"/></svg></div><h3 data-i18n="dn_title"></h3><p data-i18n="dn_desc"></p><button class="btn" data-i18n="start" onclick="startGame(6)"></button></div>
@@ -596,17 +622,17 @@ const FIREBASE_CONFIG = (function () { try { return JSON.parse(localStorage.getI
   </section>
 
   <section class="page" id="game-type">
-    <div style="margin-bottom:14px"><a href="#oyinlar" class="btn" style="margin:0;display:inline-block;text-decoration:none" data-i18n="g_back"></a></div>
+    <div class="ty-hk" style="margin-bottom:14px"><a href="#oyinlar" class="btn" style="margin:0;display:inline-block;text-decoration:none" data-i18n="g_back"></a></div>
     <div class="card" id="type-area" style="display:none;margin-top:28px">
       <h3 data-i18n="game_type"></h3>
-      <div id="type-times"><div class="gstats" style="margin:6px 0 4px"><small data-i18n="g_time" style="align-self:center;margin-right:6px"></small><button class="btn tpill" data-sec="15" onclick="setTypeTime(15)" style="margin:0 6px 0 0;padding:6px 12px">15 s</button><button class="btn tpill sel" data-sec="30" onclick="setTypeTime(30)" style="margin:0 6px 0 0;padding:6px 12px">30 s</button><button class="btn tpill" data-sec="60" onclick="setTypeTime(60)" style="margin:0 6px 0 0;padding:6px 12px">60 s</button><button class="btn tpill" data-sec="120" onclick="setTypeTime(120)" style="margin:0 6px 0 0;padding:6px 12px">120 s</button></div></div>
+      <div id="type-times" class="ty-hk"><div class="gstats" style="margin:6px 0 4px"><small data-i18n="g_time" style="align-self:center;margin-right:6px"></small><button class="btn tpill" data-sec="15" onclick="setTypeTime(15)" style="margin:0 6px 0 0;padding:6px 12px">15 s</button><button class="btn tpill sel" data-sec="30" onclick="setTypeTime(30)" style="margin:0 6px 0 0;padding:6px 12px">30 s</button><button class="btn tpill" data-sec="60" onclick="setTypeTime(60)" style="margin:0 6px 0 0;padding:6px 12px">60 s</button><button class="btn tpill" data-sec="120" onclick="setTypeTime(120)" style="margin:0 6px 0 0;padding:6px 12px">120 s</button></div></div>
       <div class="gstats">
         <div><small id="ty-time-l" data-i18n="g_time"></small><b id="ty-time">30</b></div>
         <div><small data-i18n="t_wpm"></small><b id="ty-wpm">0</b></div>
         <div><small data-i18n="t_acc"></small><b id="ty-acc">100%</b></div>
-        <div><small data-i18n="g_total"></small><b id="ty-total">0</b></div>
+        <div class="ty-hk"><small data-i18n="g_total"></small><b id="ty-total">0</b></div>
       </div>
-      <button class="btn" onclick="startType()" style="margin-top:12px;margin-left:0">&#8635; <span data-i18n="restart"></span></button>
+      <button class="btn ty-hk" onclick="startType()" style="margin-top:12px;margin-left:0">&#8635; <span data-i18n="restart"></span></button>
       <div id="ty-box" onclick="document.getElementById('ty-input').focus()" style="position:relative;overflow:hidden;max-height:calc(3 * 1.9 * 1.25rem);margin:16px 0;cursor:text">
         <p id="ty-text" style="font-size:1.25rem;line-height:1.9;font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-word;margin:0;user-select:none"></p>
       </div>
@@ -927,6 +953,27 @@ const FIREBASE_CONFIG = (function () { try { return JSON.parse(localStorage.getI
       <div class="field"><label>Hujjat ma'lumoti (JSON)</label><textarea id="fb-docdata" rows="4" placeholder='{"name":"test","score":10}'></textarea></div>
       <button class="btn" onclick="fbAddDoc()">Hujjat qo'shish / yangilash</button>
     </div>
+
+    <div class="card" id="soc-card">
+      <h3>Kirish usullari</h3>
+      <p class="fb-doc">Yoqilgan tugmalar Kirish va Ro'yxatdan o'tish sahifasida chiqadi.</p>
+      <div class="row"><span><b>Google</b> (Firebase Auth)</span><label class="switch"><input type="checkbox" id="sc-google" onchange="socSave()"><span class="slider"></span></label></div>
+      <div class="row"><span><b>Discord</b></span><label class="switch"><input type="checkbox" id="sc-discord" onchange="socSave()"><span class="slider"></span></label></div>
+      <div class="field"><label>Discord Client ID</label><input type="text" id="sc-discord-id"></div>
+      <div class="field"><label>Discord Redirect URI (bo'sh = shu sahifa)</label><input type="text" id="sc-discord-ru"></div>
+      <div class="row"><span><b>Telegram</b></span><label class="switch"><input type="checkbox" id="sc-telegram" onchange="socSave()"><span class="slider"></span></label></div>
+      <div class="field"><label>Telegram bot username (@siz)</label><input type="text" id="sc-telegram-bot"></div>
+      <div class="row"><span>Kirganlarni Firestore'ga yozish</span><label class="switch"><input type="checkbox" id="sc-sync" onchange="socSave()"><span class="slider"></span></label></div>
+      <button class="btn" onclick="socSave(true)">Saqlash</button>
+      <button class="btn" onclick="socPush()">Firestore'ga yuborish</button>
+      <button class="btn" onclick="socPull(true)">Firestore'dan olish</button>
+    </div>
+    <div class="card" id="fb-check-card">
+      <h3>Sozlash holati va qolgan ishlar</h3>
+      <div id="fb-check"></div>
+      <button class="btn" onclick="fbCheck(true)">Tekshirish</button>
+      <button class="btn" onclick="fbCopyCode()">Configni kodga nusxalash</button>
+    </div>
   </section>
 
   <section class="page" id="login">
@@ -938,6 +985,7 @@ const FIREBASE_CONFIG = (function () { try { return JSON.parse(localStorage.getI
       <div class="field"><label data-i18n="username"></label><input type="text" id="lemail"></div>
       <div class="field"><label data-i18n="password"></label><input type="password" id="lpass"></div>
       <button class="btn" data-i18n="login_btn" onclick="login()"></button>
+      <div class="soc-box"></div>
       <p style="margin-top:16px"><span data-i18n="no_account"></span> <a href="#register" class="link" data-i18n="nav_register"></a></p>
     </div>
   </section>
@@ -955,14 +1003,15 @@ const FIREBASE_CONFIG = (function () { try { return JSON.parse(localStorage.getI
       <div class="field"><label data-i18n="reg_birth"></label><input type="date" id="rbirth"></div>
       <div class="field"><label data-i18n="reg_gender"></label>
         <div class="gender-row">
-          <button type="button" class="gbtn sel" data-g="erkak" onclick="setGender('erkak')"><span>👨</span><b data-i18n="reg_male"></b></button>
-          <button type="button" class="gbtn" data-g="ayol" onclick="setGender('ayol')"><span>👩</span><b data-i18n="reg_female"></b></button>
+          <button type="button" class="gbtn sel" data-g="erkak" onclick="setGender('erkak')"><span><svg viewBox="0 0 24 24"><circle cx="10" cy="14" r="5"/><path d="M14 10l6-6M15 4h5v5"/></svg></span><b data-i18n="reg_male"></b></button>
+          <button type="button" class="gbtn" data-g="ayol" onclick="setGender('ayol')"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="M12 14v8M9 18h6"/></svg></span><b data-i18n="reg_female"></b></button>
         </div>
       </div>
       <div class="field"><label data-i18n="password"></label><input type="password" id="rpass" data-i18n-ph="pass_hint"></div>
       <div class="field"><label data-i18n="confirm"></label><input type="password" id="rpass2"></div>
       <label class="terms-row"><input type="checkbox" id="rterms" checked> <span><span data-i18n="reg_terms_pre"></span> <a href="#terms" class="link" data-i18n="reg_terms_link"></a> <span data-i18n="reg_terms_post"></span></span></label>
       <button class="btn" data-i18n="register_btn" onclick="register()"></button>
+      <div class="soc-box"></div>
       <p style="margin-top:16px"><span data-i18n="have_account"></span> <a href="#login" class="link" data-i18n="nav_login"></a></p>
     </div>
   </section>
@@ -979,7 +1028,7 @@ const FIREBASE_CONFIG = (function () { try { return JSON.parse(localStorage.getI
       <div id="pn-songs" class="pn-songs" style="display:none"></div>
       <div id="pn-msg" class="pn-msg"></div>
       <div id="pn-keys" class="pn-keys"></div>
-      <div class="pn-btns"><button class="btn" onclick="pnDemo()" data-i18n="pn_demo"></button><button class="btn" onclick="pnFull()">⛶ To'liq ekran</button></div>
+      <div class="pn-btns"><button class="btn" onclick="pnDemo()" data-i18n="pn_demo"></button><button class="btn" onclick="pnFull()"><svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:-3px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg> To'liq ekran</button></div>
     </div>
     <div style="margin-bottom:14px"><a href="#oyinlar" class="btn" style="margin:0;display:inline-block;text-decoration:none" data-i18n="g_back"></a></div>
   </section>
@@ -3775,29 +3824,29 @@ ROUTE_PAT['game-piano'] = undefined;
 window.addEventListener('hashchange', () => { if (location.hash === '#game-piano') pnInit(); });
 
 /* Piano tarjimalari */
-Object.assign(X.uz, {"pn_title": "Piano", "pn_desc": "Pianino chalib ko'ring yoki qo'shiqlarni o'rganing.", "pn_free": "Erkin ijro", "pn_song": "Qo'shiqlar", "pn_demo": "▶ Eshitish", "pn_hint": "Yoqilgan tugmani bosing", "pn_wrong": "Noto'g'ri tugma", "pn_done": "Qo'shiq tugadi! 🎉", "sg_twinkle": "Yulduzcha", "sg_jingle": "Rojdestvo: Jingle Bells", "sg_golden": "Oltin kun (original)", "sg_love": "Sevgi hikoyasi (original)", "sg_ode": "Quvonch madhiyasi", "sg_jacques": "Jak aka", "sg_elise": "Für Elise (boshlanish)", "sg_night": "Tinch tun"});
-Object.assign(X.en, {"pn_title": "Piano", "pn_desc": "Play the piano or learn songs.", "pn_free": "Free play", "pn_song": "Songs", "pn_demo": "▶ Listen", "pn_hint": "Press the highlighted key", "pn_wrong": "Wrong key", "pn_done": "Song finished! 🎉", "sg_twinkle": "Twinkle, Twinkle", "sg_jingle": "Christmas: Jingle Bells", "sg_golden": "Golden Day (original)", "sg_love": "A Love Tale (original)", "sg_ode": "Ode to Joy", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (intro)", "sg_night": "Silent Night"});
-Object.assign(X.ru, {"pn_title": "Пианино", "pn_desc": "Играйте на пианино или учите песни.", "pn_free": "Свободная игра", "pn_song": "Песни", "pn_demo": "▶ Слушать", "pn_hint": "Нажмите подсвеченную клавишу", "pn_wrong": "Неверная клавиша", "pn_done": "Песня готова! 🎉", "sg_twinkle": "Звёздочка", "sg_jingle": "Рождество: Jingle Bells", "sg_golden": "Золотой день (оригинал)", "sg_love": "История любви (оригинал)", "sg_ode": "Ода к радости", "sg_jacques": "Братец Жак", "sg_elise": "Für Elise (начало)", "sg_night": "Тихая ночь"});
+Object.assign(X.uz, {"pn_title": "Piano", "pn_desc": "Pianino chalib ko'ring yoki qo'shiqlarni o'rganing.", "pn_free": "Erkin ijro", "pn_song": "Qo'shiqlar", "pn_demo": "▶ Eshitish", "pn_hint": "Yoqilgan tugmani bosing", "pn_wrong": "Noto'g'ri tugma", "pn_done": "Qo'shiq tugadi! ", "sg_twinkle": "Yulduzcha", "sg_jingle": "Rojdestvo: Jingle Bells", "sg_golden": "Oltin kun (original)", "sg_love": "Sevgi hikoyasi (original)", "sg_ode": "Quvonch madhiyasi", "sg_jacques": "Jak aka", "sg_elise": "Für Elise (boshlanish)", "sg_night": "Tinch tun"});
+Object.assign(X.en, {"pn_title": "Piano", "pn_desc": "Play the piano or learn songs.", "pn_free": "Free play", "pn_song": "Songs", "pn_demo": "▶ Listen", "pn_hint": "Press the highlighted key", "pn_wrong": "Wrong key", "pn_done": "Song finished! ", "sg_twinkle": "Twinkle, Twinkle", "sg_jingle": "Christmas: Jingle Bells", "sg_golden": "Golden Day (original)", "sg_love": "A Love Tale (original)", "sg_ode": "Ode to Joy", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (intro)", "sg_night": "Silent Night"});
+Object.assign(X.ru, {"pn_title": "Пианино", "pn_desc": "Играйте на пианино или учите песни.", "pn_free": "Свободная игра", "pn_song": "Песни", "pn_demo": "▶ Слушать", "pn_hint": "Нажмите подсвеченную клавишу", "pn_wrong": "Неверная клавиша", "pn_done": "Песня готова! ", "sg_twinkle": "Звёздочка", "sg_jingle": "Рождество: Jingle Bells", "sg_golden": "Золотой день (оригинал)", "sg_love": "История любви (оригинал)", "sg_ode": "Ода к радости", "sg_jacques": "Братец Жак", "sg_elise": "Für Elise (начало)", "sg_night": "Тихая ночь"});
 
 /* Piano va boshqa tarjimalar 21 tilda */
-Object.assign(X.tr, {"pn_title": "Piyano", "pn_desc": "Piyanoyu çalın veya şarkıları öğrenin.", "pn_free": "Serbest çalma", "pn_song": "Şarkılar", "pn_demo": "▶ Dinle", "pn_hint": "Vurgulanan tuşa basın", "pn_wrong": "Yanlış tuş", "pn_done": "Şarkı bitti! 🎉", "sg_twinkle": "Yıldızcık", "sg_jingle": "Noel: Jingle Bells", "sg_golden": "Altın gün (orijinal)", "sg_love": "Aşk hikayesi (orijinal)", "sg_ode": "Sevinç ilahisi", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (giriş)", "sg_night": "Sessiz Gece"});
-Object.assign(X.de, {"pn_title": "Klavier", "pn_desc": "Spiel Klavier oder lerne Lieder.", "pn_free": "Freies Spiel", "pn_song": "Lieder", "pn_demo": "▶ Anhören", "pn_hint": "Drück die markierte Taste", "pn_wrong": "Falsche Taste", "pn_done": "Lied beendet! 🎉", "sg_twinkle": "Twinkle, Twinkle", "sg_jingle": "Weihnachten: Jingle Bells", "sg_golden": "Goldener Tag (Original)", "sg_love": "Liebesgeschichte (Original)", "sg_ode": "Ode an die Freude", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (Anfang)", "sg_night": "Stille Nacht"});
-Object.assign(X.fr, {"pn_title": "Piano", "pn_desc": "Jouez du piano ou apprenez des chansons.", "pn_free": "Jeu libre", "pn_song": "Chansons", "pn_demo": "▶ Écouter", "pn_hint": "Appuyez sur la touche en surbrillance", "pn_wrong": "Mauvaise touche", "pn_done": "Chanson terminée ! 🎉", "sg_twinkle": "Ainsi font, font, font", "sg_jingle": "Noël : Jingle Bells", "sg_golden": "Jour doré (original)", "sg_love": "Conte d'amour (original)", "sg_ode": "Ode à la joie", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (intro)", "sg_night": "Nuit silencieuse"});
-Object.assign(X.es, {"pn_title": "Piano", "pn_desc": "Toca el piano o aprende canciones.", "pn_free": "Juego libre", "pn_song": "Canciones", "pn_demo": "▶ Escuchar", "pn_hint": "Pulsa la tecla resaltada", "pn_wrong": "Tecla incorrecta", "pn_done": "¡Canción terminada! 🎉", "sg_twinkle": "Estrellita", "sg_jingle": "Navidad: Jingle Bells", "sg_golden": "Día dorado (original)", "sg_love": "Historia de amor (original)", "sg_ode": "Himno de la alegría", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (intro)", "sg_night": "Noche de paz"});
-Object.assign(X.zh, {"pn_title": "钢琴", "pn_desc": "弹奏钢琴或学习歌曲。", "pn_free": "自由演奏", "pn_song": "歌曲", "pn_demo": "▶ 试听", "pn_hint": "按下高亮的琴键", "pn_wrong": "按错了", "pn_done": "歌曲完成！🎉", "sg_twinkle": "小星星", "sg_jingle": "圣诞：Jingle Bells", "sg_golden": "金色的日子（原创）", "sg_love": "爱情故事（原创）", "sg_ode": "欢乐颂", "sg_jacques": "两只老虎", "sg_elise": "爱丽丝（开头）", "sg_night": "平安夜"});
-Object.assign(X.ja, {"pn_title": "ピアノ", "pn_desc": "ピアノを弾くか、曲を練習しましょう。", "pn_free": "自由演奏", "pn_song": "曲", "pn_demo": "▶ 再生", "pn_hint": "光っている鍵盤を押してください", "pn_wrong": "違うキーです", "pn_done": "曲が終わりました！🎉", "sg_twinkle": "きらきら星", "sg_jingle": "クリスマス：ジングルベル", "sg_golden": "金色の日（オリジナル）", "sg_love": "ラブストーリー（オリジナル）", "sg_ode": "歓喜の歌", "sg_jacques": "フレール・ジャック", "sg_elise": "エリーゼのために（冒頭）", "sg_night": "きよしこの夜"});
-Object.assign(X.kk, {"pn_title": "Пианино", "pn_desc": "Пианинода ойнаңыз немесе әндерді үйреніңіз.", "pn_free": "Еркін ойын", "pn_song": "Әндер", "pn_demo": "▶ Тыңдау", "pn_hint": "Жанған пернені басыңыз", "pn_wrong": "Қате перне", "pn_done": "Ән аяқталды! 🎉", "sg_twinkle": "Жұлдызша", "sg_jingle": "Рождество: Jingle Bells", "sg_golden": "Алтын күн (түпнұсқа)", "sg_love": "Махаббат хикаясы (түпнұсқа)", "sg_ode": "Қуаныш әні", "sg_jacques": "Фреер Жак", "sg_elise": "Für Elise (басы)", "sg_night": "Тыныш түн"});
-Object.assign(X.ky, {"pn_title": "Пианино", "pn_desc": "Пианинодо ойноңуз же ырларды үйрөнүңүз.", "pn_free": "Erkin oyun", "pn_song": "Ырлар", "pn_demo": "▶ Угуу", "pn_hint": "Жаркыраган клавишаны басыңыз", "pn_wrong": "Туура эмес клавиша", "pn_done": "Ыр бүттү! 🎉", "sg_twinkle": "Жылдызча", "sg_jingle": "Рождество: Jingle Bells", "sg_golden": "Алтын күн (оригинал)", "sg_love": "Сүйүү окуясы (оригинал)", "sg_ode": "Кубаныч гимни", "sg_jacques": "Фрер Жак", "sg_elise": "Für Elise (башы)", "sg_night": "Тынч түн"});
-Object.assign(X.tg, {"pn_title": "Пианино", "pn_desc": "Пианино бинавозед ё сурудҳоро омӯзед.", "pn_free": "Бозии озод", "pn_song": "Сурудҳо", "pn_demo": "▶ Гӯш кардан", "pn_hint": "Клавишаи равшанро пахш кунед", "pn_wrong": "Клавишаи нодуруст", "pn_done": "Суруд анҷом ёфт! 🎉", "sg_twinkle": "Ситорача", "sg_jingle": "Мавлуди Исо: Jingle Bells", "sg_golden": "Рӯзи тилоӣ (аслӣ)", "sg_love": "Достони муҳаббат (аслӣ)", "sg_ode": "Суруди шодӣ", "sg_jacques": "Фрер Жак", "sg_elise": "Für Elise (оғоз)", "sg_night": "Шаби ором"});
-Object.assign(X.tk, {"pn_title": "Pianino", "pn_desc": "Pianinoda çalyň ýa-da aýdymlary öwreniň.", "pn_free": "Erkin oýun", "pn_song": "Aýdymlar", "pn_demo": "▶ Diňlemek", "pn_hint": "Ýagtylan klawişi basyň", "pn_wrong": "Nädogry klawiş", "pn_done": "Aýdym gutardy! 🎉", "sg_twinkle": "Ýyldyzjyk", "sg_jingle": "Krismes: Jingle Bells", "sg_golden": "Altyn gün (asyl)", "sg_love": "Söýgi taryhy (asyl)", "sg_ode": "Şatlyk gimni", "sg_jacques": "Frer Žak", "sg_elise": "Für Elise (başy)", "sg_night": "Ynamly gije"});
-Object.assign(X.az, {"pn_title": "Piano", "pn_desc": "Pianoda çalın və ya mahnıları öyrənin.", "pn_free": "Azad ifa", "pn_song": "Mahnılar", "pn_demo": "▶ Dinləmək", "pn_hint": "İşıqlanan klavişi basın", "pn_wrong": "Səhv düymə", "pn_done": "Mahnı bitdi! 🎉", "sg_twinkle": "Ulduzcuq", "sg_jingle": "Milad: Jingle Bells", "sg_golden": "Qızıl gün (orijinal)", "sg_love": "Sevgi hekayəsi (orijinal)", "sg_ode": "Sevinc himni", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (giriş)", "sg_night": "Sakit gecə"});
-Object.assign(X.ar, {"pn_title": "البيانو", "pn_desc": "العب البيانو أو تعلّم الأغاني.", "pn_free": "لعب حر", "pn_song": "الأغاني", "pn_demo": "▶ استماع", "pn_hint": "اضغط المفتاح المضيء", "pn_wrong": "مفتاح خاطئ", "pn_done": "انتهت الأغنية! 🎉", "sg_twinkle": "نجمة صغيرة", "sg_jingle": "عيد الميلاد: Jingle Bells", "sg_golden": "يوم ذهبي (أصلي)", "sg_love": "قصة حب (أصلية)", "sg_ode": "نشيد الفرح", "sg_jacques": "فرير جاك", "sg_elise": "Für Elise (البداية)", "sg_night": "ليلة هادئة"});
-Object.assign(X.it, {"pn_title": "Pianoforte", "pn_desc": "Suona il pianoforte o impara delle canzoni.", "pn_free": "Gioco libero", "pn_song": "Canzoni", "pn_demo": "▶ Ascolta", "pn_hint": "Premi il tasto evidenziato", "pn_wrong": "Tasto sbagliato", "pn_done": "Canzone finita! 🎉", "sg_twinkle": "Stella stella", "sg_jingle": "Natale: Jingle Bells", "sg_golden": "Giorno dorato (originale)", "sg_love": "Storia d'amore (originale)", "sg_ode": "Inno alla gioia", "sg_jacques": "Fra' Martino", "sg_elise": "Für Elise (intro)", "sg_night": "Notte silenziosa"});
-Object.assign(X.pt, {"pn_title": "Piano", "pn_desc": "Toque piano ou aprenda músicas.", "pn_free": "Modo livre", "pn_song": "Músicas", "pn_demo": "▶ Ouvir", "pn_hint": "Pressione a tecla destacada", "pn_wrong": "Tecla errada", "pn_done": "Música concluída! 🎉", "sg_twinkle": "Brilha, brilha", "sg_jingle": "Natal: Jingle Bells", "sg_golden": "Dia dourado (original)", "sg_love": "História de amor (original)", "sg_ode": "Ode à alegria", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (intro)", "sg_night": "Noite feliz"});
-Object.assign(X.ko, {"pn_title": "피아노", "pn_desc": "피아노를 치거나 노래를 배워 보세요.", "pn_free": "자유 연주", "pn_song": "노래", "pn_demo": "▶ 듣기", "pn_hint": "강조된 건반을 누르세요", "pn_wrong": "잘못된 건반", "pn_done": "곡 완료! 🎉", "sg_twinkle": "반짝반짝 작은 별", "sg_jingle": "크리스마스: Jingle Bells", "sg_golden": "황금빛 날 (오리지널)", "sg_love": "사랑 이야기 (오리지널)", "sg_ode": "환희의 송가", "sg_jacques": "프레르 자크", "sg_elise": "엘리제를 위하여 (도입)", "sg_night": "고요한 밤"});
-Object.assign(X.uk, {"pn_title": "Піаніно", "pn_desc": "Грайте на піаніно або вивчайте пісні.", "pn_free": "Вільна гра", "pn_song": "Пісні", "pn_demo": "▶ Слухати", "pn_hint": "Натисніть підсвічену клавішу", "pn_wrong": "Неправильна клавіша", "pn_done": "Пісня завершена! 🎉", "sg_twinkle": "Зірочка", "sg_jingle": "Різдво: Jingle Bells", "sg_golden": "Золотий день (оригінал)", "sg_love": "Історія кохання (оригінал)", "sg_ode": "Ода до радості", "sg_jacques": "Братик Жак", "sg_elise": "Für Elise (початок)", "sg_night": "Тиха ніч"});
-Object.assign(X.pl, {"pn_title": "Pianino", "pn_desc": "Graj na pianinie lub ucz się piosenek.", "pn_free": "Swobodna gra", "pn_song": "Piosenki", "pn_demo": "▶ Posłuchaj", "pn_hint": "Naciśnij podświetlony klawisz", "pn_wrong": "Zły klawisz", "pn_done": "Piosenka skończona! 🎉", "sg_twinkle": "Gwiazdka", "sg_jingle": "Boże Narodzenie: Jingle Bells", "sg_golden": "Złoty dzień (oryginał)", "sg_love": "Historia miłosna (oryginał)", "sg_ode": "Oda do radości", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (wstęp)", "sg_night": "Cicha noc"});
-Object.assign(X.nl, {"pn_title": "Piano", "pn_desc": "Speel piano of leer liedjes.", "pn_free": "Vrij spelen", "pn_song": "Liedjes", "pn_demo": "▶ Luisteren", "pn_hint": "Druk op de gemarkeerde toets", "pn_wrong": "Verkeerde toets", "pn_done": "Liedje klaar! 🎉", "sg_twinkle": "Glinster glinster", "sg_jingle": "Kerst: Jingle Bells", "sg_golden": "Gouden dag (origineel)", "sg_love": "Liefdesverhaal (origineel)", "sg_ode": "Ode aan de vreugde", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (intro)", "sg_night": "Stille nacht"});
+Object.assign(X.tr, {"pn_title": "Piyano", "pn_desc": "Piyanoyu çalın veya şarkıları öğrenin.", "pn_free": "Serbest çalma", "pn_song": "Şarkılar", "pn_demo": "▶ Dinle", "pn_hint": "Vurgulanan tuşa basın", "pn_wrong": "Yanlış tuş", "pn_done": "Şarkı bitti! ", "sg_twinkle": "Yıldızcık", "sg_jingle": "Noel: Jingle Bells", "sg_golden": "Altın gün (orijinal)", "sg_love": "Aşk hikayesi (orijinal)", "sg_ode": "Sevinç ilahisi", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (giriş)", "sg_night": "Sessiz Gece"});
+Object.assign(X.de, {"pn_title": "Klavier", "pn_desc": "Spiel Klavier oder lerne Lieder.", "pn_free": "Freies Spiel", "pn_song": "Lieder", "pn_demo": "▶ Anhören", "pn_hint": "Drück die markierte Taste", "pn_wrong": "Falsche Taste", "pn_done": "Lied beendet! ", "sg_twinkle": "Twinkle, Twinkle", "sg_jingle": "Weihnachten: Jingle Bells", "sg_golden": "Goldener Tag (Original)", "sg_love": "Liebesgeschichte (Original)", "sg_ode": "Ode an die Freude", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (Anfang)", "sg_night": "Stille Nacht"});
+Object.assign(X.fr, {"pn_title": "Piano", "pn_desc": "Jouez du piano ou apprenez des chansons.", "pn_free": "Jeu libre", "pn_song": "Chansons", "pn_demo": "▶ Écouter", "pn_hint": "Appuyez sur la touche en surbrillance", "pn_wrong": "Mauvaise touche", "pn_done": "Chanson terminée ! ", "sg_twinkle": "Ainsi font, font, font", "sg_jingle": "Noël : Jingle Bells", "sg_golden": "Jour doré (original)", "sg_love": "Conte d'amour (original)", "sg_ode": "Ode à la joie", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (intro)", "sg_night": "Nuit silencieuse"});
+Object.assign(X.es, {"pn_title": "Piano", "pn_desc": "Toca el piano o aprende canciones.", "pn_free": "Juego libre", "pn_song": "Canciones", "pn_demo": "▶ Escuchar", "pn_hint": "Pulsa la tecla resaltada", "pn_wrong": "Tecla incorrecta", "pn_done": "¡Canción terminada! ", "sg_twinkle": "Estrellita", "sg_jingle": "Navidad: Jingle Bells", "sg_golden": "Día dorado (original)", "sg_love": "Historia de amor (original)", "sg_ode": "Himno de la alegría", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (intro)", "sg_night": "Noche de paz"});
+Object.assign(X.zh, {"pn_title": "钢琴", "pn_desc": "弹奏钢琴或学习歌曲。", "pn_free": "自由演奏", "pn_song": "歌曲", "pn_demo": "▶ 试听", "pn_hint": "按下高亮的琴键", "pn_wrong": "按错了", "pn_done": "歌曲完成！", "sg_twinkle": "小星星", "sg_jingle": "圣诞：Jingle Bells", "sg_golden": "金色的日子（原创）", "sg_love": "爱情故事（原创）", "sg_ode": "欢乐颂", "sg_jacques": "两只老虎", "sg_elise": "爱丽丝（开头）", "sg_night": "平安夜"});
+Object.assign(X.ja, {"pn_title": "ピアノ", "pn_desc": "ピアノを弾くか、曲を練習しましょう。", "pn_free": "自由演奏", "pn_song": "曲", "pn_demo": "▶ 再生", "pn_hint": "光っている鍵盤を押してください", "pn_wrong": "違うキーです", "pn_done": "曲が終わりました！", "sg_twinkle": "きらきら星", "sg_jingle": "クリスマス：ジングルベル", "sg_golden": "金色の日（オリジナル）", "sg_love": "ラブストーリー（オリジナル）", "sg_ode": "歓喜の歌", "sg_jacques": "フレール・ジャック", "sg_elise": "エリーゼのために（冒頭）", "sg_night": "きよしこの夜"});
+Object.assign(X.kk, {"pn_title": "Пианино", "pn_desc": "Пианинода ойнаңыз немесе әндерді үйреніңіз.", "pn_free": "Еркін ойын", "pn_song": "Әндер", "pn_demo": "▶ Тыңдау", "pn_hint": "Жанған пернені басыңыз", "pn_wrong": "Қате перне", "pn_done": "Ән аяқталды! ", "sg_twinkle": "Жұлдызша", "sg_jingle": "Рождество: Jingle Bells", "sg_golden": "Алтын күн (түпнұсқа)", "sg_love": "Махаббат хикаясы (түпнұсқа)", "sg_ode": "Қуаныш әні", "sg_jacques": "Фреер Жак", "sg_elise": "Für Elise (басы)", "sg_night": "Тыныш түн"});
+Object.assign(X.ky, {"pn_title": "Пианино", "pn_desc": "Пианинодо ойноңуз же ырларды үйрөнүңүз.", "pn_free": "Erkin oyun", "pn_song": "Ырлар", "pn_demo": "▶ Угуу", "pn_hint": "Жаркыраган клавишаны басыңыз", "pn_wrong": "Туура эмес клавиша", "pn_done": "Ыр бүттү! ", "sg_twinkle": "Жылдызча", "sg_jingle": "Рождество: Jingle Bells", "sg_golden": "Алтын күн (оригинал)", "sg_love": "Сүйүү окуясы (оригинал)", "sg_ode": "Кубаныч гимни", "sg_jacques": "Фрер Жак", "sg_elise": "Für Elise (башы)", "sg_night": "Тынч түн"});
+Object.assign(X.tg, {"pn_title": "Пианино", "pn_desc": "Пианино бинавозед ё сурудҳоро омӯзед.", "pn_free": "Бозии озод", "pn_song": "Сурудҳо", "pn_demo": "▶ Гӯш кардан", "pn_hint": "Клавишаи равшанро пахш кунед", "pn_wrong": "Клавишаи нодуруст", "pn_done": "Суруд анҷом ёфт! ", "sg_twinkle": "Ситорача", "sg_jingle": "Мавлуди Исо: Jingle Bells", "sg_golden": "Рӯзи тилоӣ (аслӣ)", "sg_love": "Достони муҳаббат (аслӣ)", "sg_ode": "Суруди шодӣ", "sg_jacques": "Фрер Жак", "sg_elise": "Für Elise (оғоз)", "sg_night": "Шаби ором"});
+Object.assign(X.tk, {"pn_title": "Pianino", "pn_desc": "Pianinoda çalyň ýa-da aýdymlary öwreniň.", "pn_free": "Erkin oýun", "pn_song": "Aýdymlar", "pn_demo": "▶ Diňlemek", "pn_hint": "Ýagtylan klawişi basyň", "pn_wrong": "Nädogry klawiş", "pn_done": "Aýdym gutardy! ", "sg_twinkle": "Ýyldyzjyk", "sg_jingle": "Krismes: Jingle Bells", "sg_golden": "Altyn gün (asyl)", "sg_love": "Söýgi taryhy (asyl)", "sg_ode": "Şatlyk gimni", "sg_jacques": "Frer Žak", "sg_elise": "Für Elise (başy)", "sg_night": "Ynamly gije"});
+Object.assign(X.az, {"pn_title": "Piano", "pn_desc": "Pianoda çalın və ya mahnıları öyrənin.", "pn_free": "Azad ifa", "pn_song": "Mahnılar", "pn_demo": "▶ Dinləmək", "pn_hint": "İşıqlanan klavişi basın", "pn_wrong": "Səhv düymə", "pn_done": "Mahnı bitdi! ", "sg_twinkle": "Ulduzcuq", "sg_jingle": "Milad: Jingle Bells", "sg_golden": "Qızıl gün (orijinal)", "sg_love": "Sevgi hekayəsi (orijinal)", "sg_ode": "Sevinc himni", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (giriş)", "sg_night": "Sakit gecə"});
+Object.assign(X.ar, {"pn_title": "البيانو", "pn_desc": "العب البيانو أو تعلّم الأغاني.", "pn_free": "لعب حر", "pn_song": "الأغاني", "pn_demo": "▶ استماع", "pn_hint": "اضغط المفتاح المضيء", "pn_wrong": "مفتاح خاطئ", "pn_done": "انتهت الأغنية! ", "sg_twinkle": "نجمة صغيرة", "sg_jingle": "عيد الميلاد: Jingle Bells", "sg_golden": "يوم ذهبي (أصلي)", "sg_love": "قصة حب (أصلية)", "sg_ode": "نشيد الفرح", "sg_jacques": "فرير جاك", "sg_elise": "Für Elise (البداية)", "sg_night": "ليلة هادئة"});
+Object.assign(X.it, {"pn_title": "Pianoforte", "pn_desc": "Suona il pianoforte o impara delle canzoni.", "pn_free": "Gioco libero", "pn_song": "Canzoni", "pn_demo": "▶ Ascolta", "pn_hint": "Premi il tasto evidenziato", "pn_wrong": "Tasto sbagliato", "pn_done": "Canzone finita! ", "sg_twinkle": "Stella stella", "sg_jingle": "Natale: Jingle Bells", "sg_golden": "Giorno dorato (originale)", "sg_love": "Storia d'amore (originale)", "sg_ode": "Inno alla gioia", "sg_jacques": "Fra' Martino", "sg_elise": "Für Elise (intro)", "sg_night": "Notte silenziosa"});
+Object.assign(X.pt, {"pn_title": "Piano", "pn_desc": "Toque piano ou aprenda músicas.", "pn_free": "Modo livre", "pn_song": "Músicas", "pn_demo": "▶ Ouvir", "pn_hint": "Pressione a tecla destacada", "pn_wrong": "Tecla errada", "pn_done": "Música concluída! ", "sg_twinkle": "Brilha, brilha", "sg_jingle": "Natal: Jingle Bells", "sg_golden": "Dia dourado (original)", "sg_love": "História de amor (original)", "sg_ode": "Ode à alegria", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (intro)", "sg_night": "Noite feliz"});
+Object.assign(X.ko, {"pn_title": "피아노", "pn_desc": "피아노를 치거나 노래를 배워 보세요.", "pn_free": "자유 연주", "pn_song": "노래", "pn_demo": "▶ 듣기", "pn_hint": "강조된 건반을 누르세요", "pn_wrong": "잘못된 건반", "pn_done": "곡 완료! ", "sg_twinkle": "반짝반짝 작은 별", "sg_jingle": "크리스마스: Jingle Bells", "sg_golden": "황금빛 날 (오리지널)", "sg_love": "사랑 이야기 (오리지널)", "sg_ode": "환희의 송가", "sg_jacques": "프레르 자크", "sg_elise": "엘리제를 위하여 (도입)", "sg_night": "고요한 밤"});
+Object.assign(X.uk, {"pn_title": "Піаніно", "pn_desc": "Грайте на піаніно або вивчайте пісні.", "pn_free": "Вільна гра", "pn_song": "Пісні", "pn_demo": "▶ Слухати", "pn_hint": "Натисніть підсвічену клавішу", "pn_wrong": "Неправильна клавіша", "pn_done": "Пісня завершена! ", "sg_twinkle": "Зірочка", "sg_jingle": "Різдво: Jingle Bells", "sg_golden": "Золотий день (оригінал)", "sg_love": "Історія кохання (оригінал)", "sg_ode": "Ода до радості", "sg_jacques": "Братик Жак", "sg_elise": "Für Elise (початок)", "sg_night": "Тиха ніч"});
+Object.assign(X.pl, {"pn_title": "Pianino", "pn_desc": "Graj na pianinie lub ucz się piosenek.", "pn_free": "Swobodna gra", "pn_song": "Piosenki", "pn_demo": "▶ Posłuchaj", "pn_hint": "Naciśnij podświetlony klawisz", "pn_wrong": "Zły klawisz", "pn_done": "Piosenka skończona! ", "sg_twinkle": "Gwiazdka", "sg_jingle": "Boże Narodzenie: Jingle Bells", "sg_golden": "Złoty dzień (oryginał)", "sg_love": "Historia miłosna (oryginał)", "sg_ode": "Oda do radości", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (wstęp)", "sg_night": "Cicha noc"});
+Object.assign(X.nl, {"pn_title": "Piano", "pn_desc": "Speel piano of leer liedjes.", "pn_free": "Vrij spelen", "pn_song": "Liedjes", "pn_demo": "▶ Luisteren", "pn_hint": "Druk op de gemarkeerde toets", "pn_wrong": "Verkeerde toets", "pn_done": "Liedje klaar! ", "sg_twinkle": "Glinster glinster", "sg_jingle": "Kerst: Jingle Bells", "sg_golden": "Gouden dag (origineel)", "sg_love": "Liefdesverhaal (origineel)", "sg_ode": "Ode aan de vreugde", "sg_jacques": "Frère Jacques", "sg_elise": "Für Elise (intro)", "sg_night": "Stille nacht"});
 applyI18n();
 
 /* ===== Piano (yakuniy): haqiqiy ovoz, yorliqli tugmalar, to'liq ekran ===== */
@@ -4140,6 +4189,250 @@ Object.assign(X.uz, {"reg_phone": "Telefon raqami", "reg_birth": "Tug'ilgan kuni
 Object.assign(X.en, {"reg_phone": "Phone number", "reg_birth": "Date of birth", "reg_gender": "Gender", "reg_male": "Male", "reg_female": "Female", "reg_terms_pre": "I have read the", "reg_terms_link": "Public offer terms", "reg_terms_post": "and agree.", "reg_terms_need": "Please accept the terms"});
 Object.assign(X.ru, {"reg_phone": "Номер телефона", "reg_birth": "Дата рождения", "reg_gender": "Пол", "reg_male": "Мужской", "reg_female": "Женский", "reg_terms_pre": "Я ознакомился с", "reg_terms_link": "Условиями публичной оферты", "reg_terms_post": "и согласен.", "reg_terms_need": "Примите условия оферты"});
 applyI18n();
+
+/* ===== v2: Kirish usullari, Firebase tekshiruv, status bar rangi, klaviatura ===== */
+const SOC_DEF={google:true,discord:true,telegram:true,discordId:"",discordRu:"",telegramBot:"",sync:false};
+const SOC_NAME={google:"Google",discord:"Discord",telegram:"Telegram"};
+const SOC_ICO={
+ google:'<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M21.35 11.1H12v2.9h5.35c-.23 1.4-1.6 4.1-5.35 4.1a6.1 6.1 0 0 1 0-12.2c1.9 0 3.1.8 3.8 1.5l2.6-2.5A9.5 9.5 0 0 0 12 2.5a9.5 9.5 0 1 0 0 19c5.5 0 9.1-3.9 9.1-9.3 0-.6-.1-1.1-.15-1.1z"/></svg>',
+ discord:'<svg viewBox="0 0 24 24"><path fill="#5865F2" d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>',
+ telegram:'<svg viewBox="0 0 24 24"><path fill="#229ED9" d="M11.944 0A12 12 0 1 0 24 12 12 12 0 0 0 11.944 0zm4.962 7.224c.1-.002.321.023.465.14a.5.5 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>'};
+function socCfg(){try{return Object.assign({},SOC_DEF,JSON.parse(localStorage.getItem("soc-cfg")||"{}"))}catch(e){return Object.assign({},SOC_DEF)}}
+function renderSocial(){
+  const c=socCfg(),list=["google","discord","telegram"].filter(k=>c[k]);
+  const or=({uz:"yoki",en:"or",ru:"или"})[lang]||"or";
+  document.querySelectorAll(".soc-box").forEach(b=>{
+    b.innerHTML=list.length?'<div class="soc">'+or+'</div><div class="soc-row">'+list.map(k=>'<button type="button" class="sbtn" onclick="socLogin(\''+k+'\')" aria-label="'+SOC_NAME[k]+'">'+SOC_ICO[k]+'<span>'+SOC_NAME[k]+'</span></button>').join("")+'</div>':"";
+  });
+}
+function socDone(provider,name,email,photo,pid){
+  const accs=getAccounts(),key=String(pid||email||name);
+  let a=accs.find(x=>x.provider===provider&&x.pid===key);
+  if(!a){
+    let un=name||(provider+"_user");
+    if(accs.some(x=>x.username.toLowerCase()===un.toLowerCase()))un+="_"+provider;
+    a={username:un,email:email||"",name:name||un,provider:provider,pid:key,password:"",age:"",photo:photo||""};
+    accs.push(a);setAccounts(accs);
+  }
+  enterAs(a.username,a.email,"user");
+}
+function socLogin(k){
+  const c=socCfg();
+  if(k==="google"){
+    try{if(!fbAuth&&FIREBASE_CONFIG)fbInit(FIREBASE_CONFIG)}catch(e){}
+    if(!fbAuth)return toast("Google: Firebase ulanmagan (Developer panel)");
+    const p=new firebase.auth.GoogleAuthProvider();
+    fbAuth.signInWithPopup(p).then(r=>socDone("google",r.user.displayName||(r.user.email||"").split("@")[0],r.user.email,r.user.photoURL,r.user.uid))
+      .catch(e=>{if(/popup|operation-not-supported|web-storage/i.test((e.code||"")+(e.message||"")))fbAuth.signInWithRedirect(p);else toast(e.message)});
+  }else if(k==="discord"){
+    if(!c.discordId)return toast("Discord: Client ID kiritilmagan (Developer panel)");
+    const ru=c.discordRu||(location.origin+location.pathname);
+    location.href="https://discord.com/oauth2/authorize?client_id="+encodeURIComponent(c.discordId)+"&response_type=token&scope=identify%20email&redirect_uri="+encodeURIComponent(ru);
+  }else{
+    if(!c.telegramBot)return toast("Telegram: bot username kiritilmagan (Developer panel)");
+    const ov=document.createElement("div");ov.className="thm-ov show";
+    ov.innerHTML='<div class="thm-box" style="align-items:center"><h3>Telegram</h3><div id="tg-slot"></div><button class="btn thm-ok" type="button">&times;</button></div>';
+    ov.querySelector("button").onclick=()=>ov.remove();document.body.appendChild(ov);
+    window.socTg=u=>{ov.remove();socDone("telegram",u.username||u.first_name,"",u.photo_url,u.id)};
+    const s=document.createElement("script");s.async=true;s.src="https://telegram.org/js/telegram-widget.js?22";
+    s.setAttribute("data-telegram-login",c.telegramBot.replace(/^@/,""));s.setAttribute("data-size","large");s.setAttribute("data-radius","12");s.setAttribute("data-onauth","socTg(user)");s.setAttribute("data-request-access","write");
+    ov.querySelector("#tg-slot").appendChild(s);
+  }
+}
+function socFill(){
+  const c=socCfg(),g=id=>document.getElementById(id);if(!g("sc-google"))return;
+  ["google","discord","telegram","sync"].forEach(k=>g("sc-"+k).checked=!!c[k]);
+  g("sc-discord-id").value=c.discordId;g("sc-discord-ru").value=c.discordRu;g("sc-telegram-bot").value=c.telegramBot;
+}
+function socSave(show){
+  const g=id=>document.getElementById(id);
+  const c={google:g("sc-google").checked,discord:g("sc-discord").checked,telegram:g("sc-telegram").checked,sync:g("sc-sync").checked,
+    discordId:g("sc-discord-id").value.trim(),discordRu:g("sc-discord-ru").value.trim(),telegramBot:g("sc-telegram-bot").value.trim()};
+  try{localStorage.setItem("soc-cfg",JSON.stringify(c))}catch(e){}
+  renderSocial();fbCheck();if(show===true)toast("Saqlandi");
+}
+function socPush(){
+  if(!fbReady()||!fbDb)return;const c=socCfg();delete c.sync;
+  fbDb.collection("settings").doc("auth").set(c).then(()=>toast("Firestore'ga yuborildi")).catch(e=>toast(e.message));
+}
+function socPull(loud){
+  if(!fbDb)return loud&&toast(t('t_fb_need'));
+  fbDb.collection("settings").doc("auth").get().then(d=>{
+    if(!d.exists)return loud&&toast("Firestore'da sozlama yo'q");
+    const c=Object.assign(socCfg(),d.data());try{localStorage.setItem("soc-cfg",JSON.stringify(c))}catch(e){}
+    socFill();renderSocial();fbCheck();if(loud)toast("Olindi");
+  }).catch(e=>loud&&toast(e.message));
+}
+function fbCheck(test){
+  const box=document.getElementById("fb-check");if(!box)return;
+  const c=FIREBASE_CONFIG||{},s=socCfg();
+  const it=[["Firebase config saqlangan",!!c.apiKey],["Firebase SDK yuklangan",typeof firebase!=="undefined"],["Auth ulangan",!!fbAuth],["Firestore tayyor",!!fbDb],
+    ["Google yoqilgan",s.google],["Discord Client ID kiritilgan",!!s.discordId],["Telegram bot kiritilgan",!!s.telegramBot]];
+  box.innerHTML=it.map(x=>'<div class="ck"><span>'+x[0]+'</span><b class="'+(x[1]?"fb-ok":"fb-off")+'">'+(x[1]?"OK":"Yo'q")+'</b></div>').join("")+
+   '<p class="fb-doc" style="margin-top:10px">Firebase konsolida: Authentication &gt; Sign-in method &gt; Google yoqing; Authorized domains ga sayt domenini qo\'shing; Firestore yarating (settings/* hamma o\'qisin, faqat admin yozsin). Discord: Developer Portal &gt; OAuth2 &gt; Redirects ga Redirect URI ni qo\'shing. Telegram: @BotFather &gt; /setdomain.</p>';
+  if(test===true&&fbDb)fbDb.collection("settings").doc("auth").get().then(()=>toast("Firestore ishlayapti")).catch(e=>toast(e.message));
+}
+function fbCopyCode(){
+  const c=(()=>{try{return JSON.parse(localStorage.getItem("fb-config")||"null")}catch(e){return null}})();
+  if(!c)return toast(t('t_fb_need'));
+  const txt="const FIREBASE_CONFIG = "+JSON.stringify(c)+";";
+  const done=()=>toast("Nusxalandi: index.html dagi FIREBASE_CONFIG o'rniga qo'ying");
+  if(navigator.clipboard)navigator.clipboard.writeText(txt).then(done).catch(()=>{});
+  else{const a=document.createElement("textarea");a.value=txt;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();done()}
+}
+const _enterAs=enterAs;
+enterAs=function(n,e,r){_enterAs(n,e,r);try{if(socCfg().sync&&fbDb)fbDb.collection("accounts").doc(n).set({username:n,email:e||"",role:r||"user",updated:Date.now()},{merge:true})}catch(x){}};
+(function socInit(){
+  renderSocial();socFill();fbCheck();
+  try{if(FIREBASE_CONFIG&&!fbAuth){fbInit(FIREBASE_CONFIG);socPull(false)}}catch(e){}
+  try{if(fbAuth)fbAuth.getRedirectResult().then(r=>{if(r&&r.user)socDone("google",r.user.displayName||(r.user.email||"").split("@")[0],r.user.email,r.user.photoURL,r.user.uid)}).catch(()=>{})}catch(e){}
+  const m=/access_token=([^&]+)/.exec(location.hash);
+  if(m)fetch("https://discord.com/api/users/@me",{headers:{Authorization:"Bearer "+m[1]}}).then(r=>r.json()).then(u=>{
+    history.replaceState(null,"",location.pathname+location.search);
+    socDone("discord",u.global_name||u.username,u.email||"",u.avatar?"https://cdn.discordapp.com/avatars/"+u.id+"/"+u.avatar+".png":"",u.id);
+  }).catch(()=>toast("Discord xatosi"));
+  addEventListener("hashchange",()=>{if(location.hash==="#devpanel"){socFill();fbCheck()}});
+})();
+/* status bar / tepa qora chiziq: sahifa rangini tizimga bildiramiz */
+(function(){let m=document.querySelector('meta[name=theme-color]');
+  const f=()=>{const c=getComputedStyle(document.body).backgroundColor;if(c&&c!=="rgba(0, 0, 0, 0)")m.content=c};
+  f();new MutationObserver(f).observe(document.body,{attributes:true,attributeFilter:["class","style"]});})();
+/* yozuv tezligi: klaviatura ochilganda matn ko'rinib tursin */
+function tyFix(){const a=document.activeElement;if(a&&a.id==="ty-input")window.scrollTo(0,0)}
+document.addEventListener("focusin",e=>{if(e.target.id==="ty-input")[60,250,550].forEach(d=>setTimeout(tyFix,d))});
+if(window.visualViewport)visualViewport.addEventListener("resize",()=>setTimeout(tyFix,60));
+</script>
+
+<style id="ezi-upd-css">
+#ezi-upd{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:99999}
+#ezi-upd.show{display:flex}
+#ezi-upd .box{background:var(--card,#fff);color:var(--text,#222);border-radius:18px;padding:20px;max-width:360px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+#ezi-upd h3{margin:0 0 8px;font-size:1.15rem}
+#ezi-upd p{margin:0 0 14px;font-size:.92rem;line-height:1.45;opacity:.9;white-space:pre-line}
+#ezi-upd .bar{height:8px;border-radius:4px;background:var(--peach-2,#eee);overflow:hidden;margin:0 0 14px;display:none}
+#ezi-upd .bar i{display:block;height:100%;width:0;background:var(--accent,#E8805A);transition:width .2s}
+#ezi-upd .row{display:flex;gap:10px}
+#ezi-upd button{flex:1;padding:11px 10px;border:0;border-radius:12px;font:inherit;font-weight:600;cursor:pointer;background:var(--peach-2,#eee);color:var(--text,#222)}
+#ezi-upd button.pri{background:var(--accent,#E8805A);color:#fff}
+#ezi-upd button:disabled{opacity:.5;cursor:default}
+</style>
+<script>
+/* ===== Android ilova: GitHub'dan yangilanish va status bar rangi =====
+   Brauzerda bu blok hech narsa qilmaydi (window.EziNative faqat APKda bor). */
+const EZI_UPD_TR = {
+  uz:{title:"Yangi versiya",text:"Yangi versiya {v} chiqdi.\nHozirgi versiya: {c}\n\nYangilaysizmi?",update:"Yangilash",later:"Keyinroq",close:"Yopish",downloading:"Yuklanmoqda… {p}%",ready:"Yuklab olindi. O'rnatish oynasi ochilmoqda…",perm:"Avval ruxsat bering (noma'lum manbalardan o'rnatish), so'ng qayta bosing.",error:"Yangilashda xatolik. Internetni tekshirib, qayta urinib ko'ring."},
+  en:{title:"New version",text:"Version {v} is available.\nCurrent version: {c}\n\nUpdate now?",update:"Update",later:"Later",close:"Close",downloading:"Downloading… {p}%",ready:"Downloaded. Opening the installer…",perm:"Please allow installing unknown apps for Eziplay, then tap again.",error:"Update failed. Check your internet and try again."},
+  ru:{title:"Новая версия",text:"Доступна версия {v}.\nТекущая версия: {c}\n\nОбновить сейчас?",update:"Обновить",later:"Позже",close:"Закрыть",downloading:"Загрузка… {p}%",ready:"Загружено. Открываю установщик…",perm:"Разрешите установку из неизвестных источников для Eziplay и нажмите снова.",error:"Ошибка обновления. Проверьте интернет и попробуйте снова."},
+  tr:{title:"Yeni sürüm",text:"{v} sürümü yayınlandı.\nMevcut sürüm: {c}\n\nŞimdi güncellensin mi?",update:"Güncelle",later:"Sonra",close:"Kapat",downloading:"İndiriliyor… {p}%",ready:"İndirildi. Yükleyici açılıyor…",perm:"Eziplay için bilinmeyen kaynaklardan yüklemeye izin verin, sonra tekrar dokunun.",error:"Güncelleme başarısız. İnterneti kontrol edip tekrar deneyin."},
+  az:{title:"Yeni versiya",text:"{v} versiyası çıxıb.\nHazırkı versiya: {c}\n\nİndi yeniləyəsinizmi?",update:"Yenilə",later:"Sonra",close:"Bağla",downloading:"Yüklənir… {p}%",ready:"Yükləndi. Quraşdırıcı açılır…",perm:"Eziplay üçün naməlum mənbələrdən quraşdırmaya icazə verin, sonra yenidən basın.",error:"Yeniləmə xətası. İnterneti yoxlayıb yenidən cəhd edin."},
+  de:{title:"Neue Version",text:"Version {v} ist verfügbar.\nAktuelle Version: {c}\n\nJetzt aktualisieren?",update:"Aktualisieren",later:"Später",close:"Schließen",downloading:"Lade herunter… {p}%",ready:"Heruntergeladen. Installation wird geöffnet…",perm:"Bitte erlaube die Installation unbekannter Apps für Eziplay und tippe dann erneut.",error:"Aktualisierung fehlgeschlagen. Prüfe deine Internetverbindung und versuche es erneut."},
+  fr:{title:"Nouvelle version",text:"La version {v} est disponible.\nVersion actuelle : {c}\n\nMettre à jour maintenant ?",update:"Mettre à jour",later:"Plus tard",close:"Fermer",downloading:"Téléchargement… {p} %",ready:"Téléchargé. Ouverture de l'installateur…",perm:"Autorisez l'installation d'applications inconnues pour Eziplay, puis réessayez.",error:"Échec de la mise à jour. Vérifiez votre connexion et réessayez."},
+  es:{title:"Nueva versión",text:"La versión {v} está disponible.\nVersión actual: {c}\n\n¿Actualizar ahora?",update:"Actualizar",later:"Más tarde",close:"Cerrar",downloading:"Descargando… {p}%",ready:"Descargado. Abriendo el instalador…",perm:"Permite instalar apps desconocidas para Eziplay y vuelve a pulsar.",error:"Error al actualizar. Revisa tu conexión e inténtalo de nuevo."},
+  it:{title:"Nuova versione",text:"È disponibile la versione {v}.\nVersione attuale: {c}\n\nAggiornare ora?",update:"Aggiorna",later:"Più tardi",close:"Chiudi",downloading:"Download… {p}%",ready:"Scaricato. Apertura dell'installer…",perm:"Consenti l'installazione di app sconosciute per Eziplay, poi tocca di nuovo.",error:"Aggiornamento non riuscito. Controlla la connessione e riprova."},
+  pt:{title:"Nova versão",text:"A versão {v} está disponível.\nVersão atual: {c}\n\nAtualizar agora?",update:"Atualizar",later:"Depois",close:"Fechar",downloading:"Baixando… {p}%",ready:"Baixado. Abrindo o instalador…",perm:"Permita a instalação de apps desconhecidos para o Eziplay e toque novamente.",error:"Falha na atualização. Verifique a internet e tente novamente."},
+  nl:{title:"Nieuwe versie",text:"Versie {v} is beschikbaar.\nHuidige versie: {c}\n\nNu bijwerken?",update:"Bijwerken",later:"Later",close:"Sluiten",downloading:"Downloaden… {p}%",ready:"Gedownload. Installatie wordt geopend…",perm:"Sta installatie van onbekende apps toe voor Eziplay en tik daarna opnieuw.",error:"Bijwerken mislukt. Controleer je internet en probeer opnieuw."},
+  pl:{title:"Nowa wersja",text:"Dostępna jest wersja {v}.\nAktualna wersja: {c}\n\nZaktualizować teraz?",update:"Aktualizuj",later:"Później",close:"Zamknij",downloading:"Pobieranie… {p}%",ready:"Pobrano. Otwieranie instalatora…",perm:"Zezwól na instalację nieznanych aplikacji dla Eziplay, a potem kliknij ponownie.",error:"Aktualizacja nie powiodła się. Sprawdź internet i spróbuj ponownie."},
+  uk:{title:"Нова версія",text:"Доступна версія {v}.\nПоточна версія: {c}\n\nОновити зараз?",update:"Оновити",later:"Пізніше",close:"Закрити",downloading:"Завантаження… {p}%",ready:"Завантажено. Відкриваю інсталятор…",perm:"Дозвольте встановлення з невідомих джерел для Eziplay і натисніть знову.",error:"Помилка оновлення. Перевірте інтернет і спробуйте ще раз."},
+  kk:{title:"Жаңа нұсқа",text:"{v} нұсқасы шықты.\nАғымдағы нұсқа: {c}\n\nҚазір жаңартасыз ба?",update:"Жаңарту",later:"Кейінірек",close:"Жабу",downloading:"Жүктелуде… {p}%",ready:"Жүктелді. Орнатушы ашылуда…",perm:"Eziplay үшін белгісіз көздерден орнатуға рұқсат беріңіз де, қайта басыңыз.",error:"Жаңарту қатесі. Интернетті тексеріп, қайта көріңіз."},
+  ky:{title:"Жаңы версия",text:"{v} версиясы чыкты.\nУчурдагы версия: {c}\n\nАзыр жаңыртасызбы?",update:"Жаңыртуу",later:"Кийинчерээк",close:"Жабуу",downloading:"Жүктөлүүдө… {p}%",ready:"Жүктөлдү. Орнаткыч ачылууда…",perm:"Eziplay үчүн белгисиз булактардан орнотууга уруксат бериңиз да, кайра басыңыз.",error:"Жаңыртуу катасы. Интернетти текшерип, кайра аракет кылыңыз."},
+  tg:{title:"Версияи нав",text:"Версияи {v} баромадааст.\nВерсияи ҷорӣ: {c}\n\nҲозир навсозӣ мекунед?",update:"Навсозӣ",later:"Баъдан",close:"Пӯшидан",downloading:"Зеркашӣ… {p}%",ready:"Зеркашӣ шуд. Насбкунанда кушода мешавад…",perm:"Барои Eziplay насби барномаҳои ношинохта иҷозат диҳед ва бори дигар пахш кунед.",error:"Навсозӣ ноком шуд. Интернетро санҷед ва бори дигар кӯшиш кунед."},
+  tk:{title:"Täze wersiýa",text:"{v} wersiýasy çykdy.\nHäzirki wersiýa: {c}\n\nHäzir täzelemek isleýärsiňizmi?",update:"Täzelemek",later:"Soňra",close:"Ýapmak",downloading:"Ýüklenýär… {p}%",ready:"Ýüklendi. Gurnaýjy açylýar…",perm:"Eziplay üçin näbelli çeşmelerden gurnamaga rugsat beriň we ýene basyň.",error:"Täzelenmedi. Internetiňizi barlap, ýene synanyşyň."},
+  ar:{title:"نسخة جديدة",text:"الإصدار {v} متوفر.\nالإصدار الحالي: {c}\n\nهل تريد التحديث الآن؟",update:"تحديث",later:"لاحقاً",close:"إغلاق",downloading:"جارٍ التنزيل… {p}%",ready:"تم التنزيل. جارٍ فتح أداة التثبيت…",perm:"يرجى السماح بالتثبيت من مصادر غير معروفة لـ Eziplay ثم اضغط مرة أخرى.",error:"فشل التحديث. تحقق من الإنترنت وحاول مرة أخرى."},
+  ja:{title:"新しいバージョン",text:"バージョン {v} が利用可能です。\n現在のバージョン: {c}\n\n今すぐ更新しますか？",update:"更新",later:"あとで",close:"閉じる",downloading:"ダウンロード中… {p}%",ready:"ダウンロード完了。インストーラーを開いています…",perm:"Eziplay の不明なアプリのインストールを許可してから、もう一度タップしてください。",error:"更新に失敗しました。インターネット接続を確認して、もう一度お試しください。"},
+  ko:{title:"새 버전",text:"{v} 버전이 나왔습니다.\n현재 버전: {c}\n\n지금 업데이트할까요?",update:"업데이트",later:"나중에",close:"닫기",downloading:"다운로드 중… {p}%",ready:"다운로드 완료. 설치 화면을 여는 중…",perm:"Eziplay의 알 수 없는 앱 설치를 허용한 뒤 다시 눌러 주세요.",error:"업데이트에 실패했습니다. 인터넷을 확인하고 다시 시도해 주세요."},
+  zh:{title:"新版本",text:"版本 {v} 已发布。\n当前版本：{c}\n\n现在更新吗？",update:"更新",later:"稍后",close:"关闭",downloading:"下载中… {p}%",ready:"下载完成，正在打开安装程序…",perm:"请允许 Eziplay 安装未知来源应用，然后再点一次。",error:"更新失败，请检查网络后重试。"}
+};
+function eziT(k, vars) {
+  const d = EZI_UPD_TR[lang] || EZI_UPD_TR.en;
+  let s = d[k] || EZI_UPD_TR.en[k] || k;
+  if (vars) for (const x in vars) s = s.split("{" + x + "}").join(String(vars[x]));
+  return s;
+}
+function eziCmp(a, b) {
+  const x = String(a).replace(/^v/i, "").split("."), y = String(b).replace(/^v/i, "").split(".");
+  for (let i = 0; i < Math.max(x.length, y.length); i++) {
+    const m = parseInt(x[i] || 0, 10) || 0, n = parseInt(y[i] || 0, 10) || 0;
+    if (m !== n) return m - n;
+  }
+  return 0;
+}
+const EZI_NATIVE = (typeof window.EziNative === "object" && window.EziNative) || null;
+const EZI_VER = (function () { try { return EZI_NATIVE ? EZI_NATIVE.getVersion() : ""; } catch (e) { return ""; } })();
+let eziInfo = null;
+
+function eziBox() {
+  let el = document.getElementById("ezi-upd");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "ezi-upd";
+    el.innerHTML = '<div class="box"><h3></h3><p></p><div class="bar"><i></i></div><div class="row"><button class="later"></button><button class="pri"></button></div></div>';
+    document.body.appendChild(el);
+  }
+  return el;
+}
+function eziHide() { const el = document.getElementById("ezi-upd"); if (el) el.classList.remove("show"); }
+
+/* Native (MainActivity) tomonidan chaqiriladi: yangi versiya bor bo'lsa */
+window.eziOnUpdate = function (info) {
+  if (!info || !info.version || !info.url) return;
+  if (eziCmp(info.version, EZI_VER) <= 0) return;
+  eziInfo = info;
+  const el = eziBox();
+  el.querySelector("h3").textContent = eziT("title");
+  el.querySelector("p").textContent = eziT("text", { v: info.version, c: EZI_VER });
+  el.querySelector(".bar").style.display = "none";
+  el.querySelector(".bar i").style.width = "0";
+  const later = el.querySelector(".later"), pri = el.querySelector(".pri");
+  later.textContent = eziT("later"); pri.textContent = eziT("update");
+  later.disabled = false; pri.disabled = false;
+  later.onclick = eziHide;
+  pri.onclick = eziStart;
+  el.classList.add("show");
+};
+
+function eziStart() {
+  if (!eziInfo || !EZI_NATIVE) return;
+  const el = eziBox(), bar = el.querySelector(".bar"), p = el.querySelector("p");
+  const pri = el.querySelector(".pri"), later = el.querySelector(".later");
+  pri.disabled = true; later.disabled = true;
+  bar.style.display = "block";
+  window.eziUpdateProgress = function (pct) {
+    bar.querySelector("i").style.width = pct + "%";
+    p.textContent = eziT("downloading", { p: pct });
+  };
+  window.eziUpdateReady = function () {
+    p.textContent = eziT("ready");
+    later.textContent = eziT("close"); later.disabled = false;
+  };
+  window.eziUpdateError = function (code) {
+    bar.style.display = "none";
+    p.textContent = eziT(code === "perm" ? "perm" : "error");
+    pri.disabled = false; later.disabled = false;
+  };
+  try { EZI_NATIVE.downloadUpdate(eziInfo.url); }
+  catch (e) { window.eziUpdateError("error"); }
+}
+
+/* Status bar (tepadagi tizim paneli) rangini sahifa foniga moslaymiz */
+(function () {
+  if (!EZI_NATIVE) return;
+  const parse = function (c) {
+    const m = /rgba?\(\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(c || "");
+    if (!m || (m[4] !== undefined && +m[4] === 0)) return null;
+    return [+m[1], +m[2], +m[3]];
+  };
+  const f = function () {
+    const rgb = parse(getComputedStyle(document.body).backgroundColor) ||
+                parse(getComputedStyle(document.documentElement).backgroundColor);
+    if (!rgb) return;
+    const hex = "#" + rgb.map(function (v) { return Math.round(v).toString(16).padStart(2, "0"); }).join("");
+    const light = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) > 160;
+    try { EZI_NATIVE.setStatusColor(hex, light); } catch (e) {}
+  };
+  f();
+  window.addEventListener("load", f);
+  new MutationObserver(f).observe(document.body, { attributes: true, attributeFilter: ["class", "style"] });
+})();
 </script>
 
 </body>

@@ -8,16 +8,43 @@ android {
         applicationId "uz.eziplay.app"
         minSdk 24
         targetSdk 34
-        versionCode 10227
-        versionName "1.2.27"
+        versionCode 10228
+        versionName "1.2.28"
+
+        // Yangilanishlar shu GitHub repodan olinadi (repo PUBLIC bo'lishi kerak).
+        // Format: "foydalanuvchi/repo-nomi"  — masalan "ali/eziplay-android"
+        buildConfigField "String", "GITHUB_REPO", "\"OWNER/eziplay-android\""
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    // Imzo kaliti GitHub Secrets dan keladi (KEYSTORE_PATH bo'lsa release kalit, bo'lmasa debug)
+    signingConfigs {
+        release {
+            if (System.getenv("KEYSTORE_PATH")) {
+                storeFile file(System.getenv("KEYSTORE_PATH"))
+                storePassword System.getenv("KEYSTORE_PASSWORD")
+                keyAlias System.getenv("KEY_ALIAS")
+                keyPassword System.getenv("KEY_PASSWORD")
+            }
+        }
     }
 
     buildTypes {
-        release { minifyEnabled false }
+        release {
+            minifyEnabled false
+            signingConfig System.getenv("KEYSTORE_PATH") ? signingConfigs.release : signingConfigs.debug
+        }
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.13.1'
 }
