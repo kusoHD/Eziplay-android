@@ -2844,6 +2844,7 @@ function login() {
   // regular accounts
   const acc = getAccounts().find(a => a.username.toLowerCase() === u.toLowerCase() || a.email.toLowerCase() === u.toLowerCase());
   if (!acc) return toast(t("t_no_account"));
+  if (acc.fb) return eziFbLogin(acc, p);
   if (acc.password !== p) return toast(t("t_wrong_pass"));
   enterAs(acc.username, acc.email, "user");
 }
@@ -2863,11 +2864,13 @@ function register() {
   const username = ru || n;
   const accs = getAccounts();
   if (accs.some(a => a.username.toLowerCase() === username.toLowerCase())) return toast(t("t_user_taken"));
-  accs.push({ username: username, email: e, password: p, name: n, age: ra, phone: rph, gender: rg });
-  setAccounts(accs);
-  const prof = readProfile(); Object.assign(prof, { name: n, email: e, username: ru, age: ra, phone: rph, gender: rg });
-  try { localStorage.setItem("profile", JSON.stringify(prof)); } catch (err) {}
-  enterAs(username, e, "user");
+  try { if (!fbAuth && FIREBASE_CONFIG) fbInit(FIREBASE_CONFIG); } catch (err) {}
+  if (!fbAuth) return toast(eziV("need_fb"));
+  const pending = { username: username, n: n, e: e, p: p, ru: ru, ra: ra, rph: rph, rg: rg };
+  fbAuth.createUserWithEmailAndPassword(e, p)
+    .then(cred => cred.user.sendEmailVerification()
+      .then(() => eziVerifyOpen(cred.user, e, () => eziFinishRegister(pending))))
+    .catch(err => toast(eziFbMsg(err)));
 }
 
 const pages = document.querySelectorAll(".page");
@@ -4216,9 +4219,20 @@ function socDone(provider,name,email,photo,pid){
   }
   enterAs(a.username,a.email,"user");
 }
+/* Android ilova: native Google Sign-In -> idToken -> Firebase */
+window.eziGoogleToken = function (idToken) {
+  try { if (!fbAuth && FIREBASE_CONFIG) fbInit(FIREBASE_CONFIG); } catch (e) {}
+  if (!fbAuth) return toast("Google: Firebase ulanmagan (Developer panel)");
+  const cred = firebase.auth.GoogleAuthProvider.credential(idToken);
+  fbAuth.signInWithCredential(cred)
+    .then(r => socDone("google", r.user.displayName || (r.user.email || "").split("@")[0], r.user.email, r.user.photoURL, r.user.uid))
+    .catch(e => toast(e.message || "Google xatosi"));
+};
+window.eziGoogleError = function (msg) { toast(msg || "Google xatosi"); };
 function socLogin(k){
   const c=socCfg();
   if(k==="google"){
+    if(EZI_NATIVE){ try{EZI_NATIVE.googleSignIn()}catch(e){toast("Google xatosi")} return; }
     try{if(!fbAuth&&FIREBASE_CONFIG)fbInit(FIREBASE_CONFIG)}catch(e){}
     if(!fbAuth)return toast("Google: Firebase ulanmagan (Developer panel)");
     const p=new firebase.auth.GoogleAuthProvider();
@@ -4411,6 +4425,69 @@ function eziStart() {
   };
   try { EZI_NATIVE.downloadUpdate(eziInfo.url); }
   catch (e) { window.eziUpdateError("error"); }
+}
+
+/* ===== Email tasdiqlash (Firebase) ===== */
+const EZI_V = {
+  uz:{title:"Emailni tasdiqlang",text:"{e} manziliga tasdiqlash xati yuborildi. Havoladan o'ting, so'ng «Tekshirish» ni bosing.",check:"Tekshirish",resend:"Qayta yuborish",cancel:"Bekor qilish",sent:"Xat qayta yuborildi",notyet:"Email hali tasdiqlanmagan",done:"Ro'yxatdan o'tish muvaffaqiyatli",need_fb:"Firebase ulanmagan (config kerak)",wrong:"Email yoki parol noto'g'ri",in_use:"Bu email allaqachon ro'yxatdan o'tgan"},
+  en:{title:"Verify your email",text:"A verification email was sent to {e}. Open the link, then tap «Check».",check:"Check",resend:"Resend",cancel:"Cancel",sent:"Verification email sent again",notyet:"Email is not verified yet",done:"Registration successful",need_fb:"Firebase is not connected (config needed)",wrong:"Wrong email or password",in_use:"This email is already registered"},
+  ru:{title:"Подтвердите email",text:"Письмо для подтверждения отправлено на {e}. Перейдите по ссылке, затем нажмите «Проверить».",check:"Проверить",resend:"Отправить снова",cancel:"Отмена",sent:"Письмо отправлено снова",notyet:"Email ещё не подтверждён",done:"Регистрация успешна",need_fb:"Firebase не подключён (нужна конфигурация)",wrong:"Неверный email или пароль",in_use:"Этот email уже зарегистрирован"}
+};
+function eziV(k) { const l = EZI_V[lang] ? lang : "en"; return EZI_V[l][k] || EZI_V.en[k] || k; }
+function eziFbMsg(err) {
+  const c = (err && err.code) || "";
+  if (/wrong-password|invalid-credential|user-not-found|invalid-login/.test(c)) return eziV("wrong");
+  if (c === "auth/email-already-in-use") return eziV("in_use");
+  return (err && err.message) || "Error";
+}
+/* Tasdiqlash oynasi: foydalanuvchi emailni tasdiqlaguncha onDone chaqirilmaydi */
+function eziVerifyOpen(user, email, onDone) {
+  const el = eziBox();
+  el.querySelector("h3").textContent = eziV("title");
+  el.querySelector("p").textContent = eziV("text").split("{e}").join(email);
+  el.querySelector(".bar").style.display = "none";
+  const row = el.querySelector(".row");
+  let rs = el.querySelector(".resend");
+  if (!rs) { rs = document.createElement("button"); rs.className = "resend"; row.insertBefore(rs, row.querySelector(".pri")); }
+  const later = el.querySelector(".later"), pri = el.querySelector(".pri");
+  later.textContent = eziV("cancel"); pri.textContent = eziV("check"); rs.textContent = eziV("resend");
+  later.disabled = pri.disabled = rs.disabled = false;
+  later.onclick = function () { eziHide(); try { if (fbAuth) fbAuth.signOut(); } catch (e) {} };
+  rs.onclick = function () {
+    rs.disabled = true;
+    user.sendEmailVerification().then(() => toast(eziV("sent"))).catch(err => toast(eziFbMsg(err)))
+      .finally(() => { rs.disabled = false; });
+  };
+  pri.onclick = function () {
+    pri.disabled = true;
+    user.reload().then(() => {
+      if (user.emailVerified) { eziHide(); onDone(); }
+      else { toast(eziV("notyet")); pri.disabled = false; }
+    }).catch(err => { toast(eziFbMsg(err)); pri.disabled = false; });
+  };
+  el.classList.add("show");
+}
+/* Ro'yxatdan o'tgan tasdiqlangan hisobni saqlash va kirish */
+function eziFinishRegister(pg) {
+  const accs = getAccounts();
+  if (!accs.some(a => a.username.toLowerCase() === pg.username.toLowerCase())) {
+    accs.push({ username: pg.username, email: pg.e, password: pg.p, name: pg.n, age: pg.ra, phone: pg.rph, gender: pg.rg, fb: true });
+    setAccounts(accs);
+  }
+  const prof = readProfile(); Object.assign(prof, { name: pg.n, email: pg.e, username: pg.ru, age: pg.ra, phone: pg.rph, gender: pg.rg });
+  try { localStorage.setItem("profile", JSON.stringify(prof)); } catch (err) {}
+  toast(eziV("done"));
+  enterAs(pg.username, pg.e, "user");
+}
+/* Firebase hisobi bilan kirish (email tasdiqlanmagan bo'lsa oyna chiqadi) */
+function eziFbLogin(acc, p) {
+  try { if (!fbAuth && FIREBASE_CONFIG) fbInit(FIREBASE_CONFIG); } catch (e) {}
+  if (!fbAuth) return toast(eziV("need_fb"));
+  fbAuth.signInWithEmailAndPassword(acc.email, p).then(cred => {
+    const u = cred.user;
+    if (u.emailVerified) return enterAs(acc.username, acc.email, "user");
+    eziVerifyOpen(u, acc.email, () => enterAs(acc.username, acc.email, "user"));
+  }).catch(err => toast(eziFbMsg(err)));
 }
 
 /* Status bar (tepadagi tizim paneli) rangini sahifa foniga moslaymiz */

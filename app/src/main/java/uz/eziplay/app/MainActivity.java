@@ -19,6 +19,13 @@ import android.webkit.WebViewClient;
 
 import androidx.core.content.FileProvider;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -35,6 +42,7 @@ public class MainActivity extends Activity {
     private WebView webView;
     private boolean updateChecked = false;
     private volatile boolean downloading = false;
+    private static final int RC_GOOGLE = 9001;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -91,6 +99,11 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void setStatusColor(String hex, boolean lightBackground) {
             runOnUiThread(() -> applyStatusColor(hex, lightBackground));
+        }
+
+        @JavascriptInterface
+        public void googleSignIn() {
+            runOnUiThread(MainActivity.this::startGoogleSignIn);
         }
 
         @JavascriptInterface
@@ -231,6 +244,36 @@ public class MainActivity extends Activity {
             startActivity(i);
         } catch (Exception e) {
             fireJs("eziUpdateError", JSONObject.quote("error"));
+        }
+    }
+
+    /* ---------- Google Sign-In (native, WebView'da ishlamaydigan OAuth o'rniga) ---------- */
+    private void startGoogleSignIn() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(BuildConfig.GOOGLE_WEB_CLIENT_ID)
+                .requestEmail()
+                .build();
+        GoogleSignInClient client = GoogleSignIn.getClient(this, gso);
+        startActivityForResult(client.getSignInIntent(), RC_GOOGLE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != RC_GOOGLE) return;
+        try {
+            GoogleSignInAccount acc = GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException.class);
+            String token = acc.getIdToken();
+            if (token == null) {
+                fireJs("eziGoogleError", JSONObject.quote("Google token olinmadi"));
+                return;
+            }
+            fireJs("eziGoogleToken", JSONObject.quote(token));
+        } catch (ApiException e) {
+            if (e.getStatusCode() == CommonStatusCodes.CANCELED) return; // foydalanuvchi bekor qildi
+            fireJs("eziGoogleError", JSONObject.quote("Google kirish xatosi: " + e.getStatusCode()));
+        } catch (Exception e) {
+            fireJs("eziGoogleError", JSONObject.quote("Google kirish xatosi"));
         }
     }
 
