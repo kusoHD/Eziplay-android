@@ -47,6 +47,12 @@ android {
     }
 }
 
+// Eski kotlin-stdlib-jdk7/jdk8 (1.6.x) klasslari yangi kotlin-stdlib bilan to'qnashmasin
+configurations.all {
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+}
+
 dependencies {
     implementation 'androidx.core:core:1.13.1'
     implementation 'com.google.android.gms:play-services-auth:21.2.0'
